@@ -15,7 +15,7 @@
 
 #
 # To download and run the script on your server :
-# cd /usr/src/ ; rm install-freeswitch.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/develop/install/install-freeswitch.sh ; chmod +x install-freeswitch.sh ; ./install-freeswitch.sh
+# cd /usr/src/ ; rm install-freeswitch.sh ; wget --no-check-certificate https://raw.githubusercontent.com/innotelinc/newfies-dialer/develop/install/install-freeswitch.sh ; chmod +x install-freeswitch.sh ; ./install-freeswitch.sh
 #
 
 # Set branch to install develop / default: master

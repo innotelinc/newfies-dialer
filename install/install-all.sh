@@ -47,7 +47,7 @@ func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
         apt-get -y install lsb-release
-        if [ "$(lsb_release -cs)" != "wheezy" ] && [ "$(lsb_release -cs)" != "jessie" ]; then
+        if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "focal" ]; then
             echo $SCRIPT_NOTICE
             exit 255
         fi
@@ -125,12 +125,12 @@ esac
 if [ $INSTALL_FS = "yes" ]; then
     #Install Freeswitch
     cd /usr/src/
-    wget --no-check-certificate  https://raw.github.com/newfies-dialer/newfies-dialer/$BRANCH/install/install-freeswitch.sh -O install-freeswitch.sh
+    wget --no-check-certificate  https://raw.githubusercontent.com/innotelinc/newfies-dialer/develop/install/install-freeswitch.sh -O install-freeswitch.sh
     bash install-freeswitch.sh
     /etc/init.d/freeswitch start
 fi
 
 #Install Newfies
 cd /usr/src/
-wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/$BRANCH/install/install-newfies.sh -O install-newfies.sh
+wget --no-check-certificate https://raw.githubusercontent.com/innotelinc/newfies-dialer/develop/install/install-newfies.sh -O install-newfies.sh
 bash install-newfies.sh

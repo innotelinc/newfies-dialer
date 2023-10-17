@@ -47,7 +47,7 @@ func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
         apt -y --allow-unauthenticated install lsb-release
-        if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "focal" ]; then
+        if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "jessie" ] && [ "$(lsb_release -cs)" != "focal" ]; then
             echo $SCRIPT_NOTICE
             exit 255
         fi

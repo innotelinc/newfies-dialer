@@ -13,17 +13,6 @@
 # Arezqui Belaid <info@star2billing.com>
 #
 
-#
-# To download and run the script on your server :
-# cd /usr/src/ ; rm install-all.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/master/install/install-all.sh ; chmod +x install-all.sh ; ./install-all.sh
-#
-#
-# To install develop branch:
-#
-# export BRANCH=develop; export INSTALL_FS=yes
-# cd /usr/src/ ; rm install-all.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/develop/install/install-all.sh ; chmod +x install-all.sh ; ./install-all.sh
-#
-
 # Set branch to install develop / default: master
 if [ -z "${BRANCH}" ]; then
     BRANCH='master'
@@ -110,7 +99,7 @@ echo ""
 case $DIST in
     'DEBIAN')
         apt -y --allow-unauthenticated update
-        apt -y --allow-unauthenticated install vim git-core
+        apt -y --allow-unauthenticated install vim git nano
     ;;
     'CENTOS')
 		func_install_epel_repo

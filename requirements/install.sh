@@ -16,13 +16,13 @@
 echo "Install basic requirements..."
 for line in $(cat requirements/basic.txt | grep -v \#)
 do
-    pip install $line --use-mirrors
+    pip install $line
 done
 
 echo "Install Django requirements..."
 for line in $(cat requirements/django.txt | grep -v \#)
 do
-    pip install $line --use-mirrors --allow-all-external --allow-unverified django-admin-tools
+    pip install $line django-admin-tools
 done
 
 echo "Install Dev requirements..."
@@ -34,5 +34,5 @@ done
 echo "Install test requirements..."
 for line in $(cat requirements/test.txt | grep -v \#)
 do
-    pip install $line --use-mirrors
+    pip install $line
 done

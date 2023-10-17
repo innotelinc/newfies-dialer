@@ -49,6 +49,7 @@ export LANG="en_US.UTF-8"
 SCRIPT_NOTICE="This install script is only intended to run on Debian 7.X or 8.X"
 
 # Identify Linux Distribution type
+# Changed to Debian 10 and Ubuntu 20
 func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
@@ -176,7 +177,7 @@ func_install_dependencies(){
             #Used by PostgreSQL
             echo "deb http://apt.postgresql.org/pub/repos/apt/ $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list
             wget --no-check-certificate --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc|apt-key add -
-            apt-get update
+            apt -yo Acquire::Check-Valid-Until=false update
 
             export LANGUAGE=en_US.UTF-8
             export LANG=en_US.UTF-8
@@ -187,29 +188,29 @@ func_install_dependencies(){
             locale-gen pt_BR.UTF-8
             #dpkg-reconfigure locales
 
-            apt-get -y remove apache2.2-common apache2
-            apt-get -y install sudo curl
-            apt-get -y install hdparm htop vim
+            apt -yo Acquire::Check-Valid-Until=false remove apache2.2-common apache2
+            apt -yo Acquire::Check-Valid-Until=false install sudo curl
+            apt -yo Acquire::Check-Valid-Until=false install hdparm htop vim
             update-alternatives --set editor /usr/bin/vim.tiny
 
             #Install Postgresql
-            apt-get -y install libpq-dev
-            apt-get -y install postgresql-9.3 postgresql-contrib-9.3
+            apt -yo Acquire::Check-Valid-Until=false install libpq-dev
+            apt -yo Acquire::Check-Valid-Until=false install postgresql-9.3 postgresql-contrib-9.3
             pg_createcluster 9.3 main --start
             /etc/init.d/postgresql start
 
-            apt-get -y install python-software-properties
-            apt-get -y install python-setuptools python-dev build-essential
-            apt-get -y install nginx supervisor
-            apt-get -y install git-core mercurial gawk cmake
-            apt-get -y install python-pip
+            apt -yo Acquire::Check-Valid-Until=false install python-software-properties
+            apt -yo Acquire::Check-Valid-Until=false install python-setuptools python-dev build-essential
+            apt -yo Acquire::Check-Valid-Until=false install nginx supervisor
+            apt -yo Acquire::Check-Valid-Until=false install git-core mercurial gawk cmake
+            apt -yo Acquire::Check-Valid-Until=false install python-pip
             # for audiofile convertion
-            apt-get -y install libsox-fmt-mp3 libsox-fmt-all mpg321
+            apt -yo Acquire::Check-Valid-Until=false install libsox-fmt-mp3 libsox-fmt-all mpg321
             #repeat flite install in case FS is on a different server
-            apt-get -y install flite
+            apt -yo Acquire::Check-Valid-Until=false install flite
 
             #Install Node.js & NPM
-            apt-get -y install nodejs-legacy
+            apt -yo Acquire::Check-Valid-Until=false install nodejs-legacy
             curl -sL https://deb.nodesource.com/setup | bash -
             apt-get install -y nodejs
 
@@ -223,12 +224,12 @@ func_install_dependencies(){
             # node -v
 
             #Lua Deps
-            apt-get -y install lua5.2 liblua5.2-dev
+            apt -yo Acquire::Check-Valid-Until=false install lua5.2 liblua5.2-dev
 
             #needed by lua-curl
-            apt-get -y install libcurl4-openssl-dev
+            apt -yo Acquire::Check-Valid-Until=false install libcurl4-openssl-dev
             #Memcached
-            apt-get -y install memcached
+            apt -yo Acquire::Check-Valid-Until=false install memcached
         ;;
         'CENTOS')
             yum -y groupinstall "Development Tools"
@@ -914,8 +915,8 @@ func_install_rabbitmq() {
                 echo "deb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
                 wget --no-check-certificate --quiet -O - http://www.rabbitmq.com/rabbitmq-signing-key-public.asc | apt-key add -
             fi
-            apt-get update
-            apt-get -y install rabbitmq-server
+            apt -yo Acquire::Check-Valid-Until=false update
+            apt -yo Acquire::Check-Valid-Until=false install rabbitmq-server
             /usr/sbin/rabbitmq-plugins enable rabbitmq_management
             # echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
 
@@ -952,8 +953,8 @@ func_install_redis() {
             echo "deb http://packages.dotdeb.org $DEBIANCODE all" > /etc/apt/sources.list.d/dotdeb.list
             echo "deb-src http://packages.dotdeb.org $DEBIANCODE all" >> /etc/apt/sources.list.d/dotdeb.list
             wget --no-check-certificate --quiet -O - http://www.dotdeb.org/dotdeb.gpg | apt-key add -
-            apt-get update
-            apt-get -y install redis-server
+            apt -yo Acquire::Check-Valid-Until=false update
+            apt -yo Acquire::Check-Valid-Until=false install redis-server
             /etc/init.d/redis-server restart
         ;;
         'CENTOS')

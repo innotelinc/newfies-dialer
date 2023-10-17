@@ -13,13 +13,6 @@
 # Arezqui Belaid <info@star2billing.com>
 #
 
-#
-# To download and run the script on your server :
-
-# >> Install with develop script :
-# cd /usr/src/ ; rm install-newfies.sh ; wget --no-check-certificate https://raw.githubusercontent.com/innotelinc/newfies-dialer/develop/install/install-newfies.sh ; chmod +x install-newfies.sh ; ./install-newfies.sh
-#
-
 # Set branch to install develop / default: master
 if [ -z "${BRANCH}" ]; then
     BRANCH='master'
@@ -205,7 +198,7 @@ func_install_dependencies(){
             apt -y --allow-unauthenticated install git-core mercurial gawk cmake
             apt -y --allow-unauthenticated install python-pip
             # for audiofile convertion
-            apt -y --allow-unauthenticated install libsox-fmt-mp3 libsox-fmt-all mpg321
+            apt -y --allow-unauthenticated install libsox-fmt-mp3 libsox-fmt-all mpg321 mpg123
             #repeat flite install in case FS is on a different server
             apt -y --allow-unauthenticated install flite
 

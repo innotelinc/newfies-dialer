@@ -16,23 +16,23 @@
 echo "Install basic requirements..."
 for line in $(cat requirements/basic.txt | grep -v \#)
 do
-    pip install $line
+    pip3 install $line
 done
 
 echo "Install Django requirements..."
 for line in $(cat requirements/django.txt | grep -v \#)
 do
-    pip install $line django-admin-tools
+    pip3 install $line django-admin-tools
 done
 
 echo "Install Dev requirements..."
 for line in $(cat requirements/dev.txt | grep -v \#)
 do
-    pip install $line
+    pip3 install $line
 done
 
 echo "Install test requirements..."
 for line in $(cat requirements/test.txt | grep -v \#)
 do
-    pip install $line
+    pip3 install $line
 done

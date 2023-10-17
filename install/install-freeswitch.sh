@@ -105,6 +105,31 @@ func_install_fs_sources() {
         /usr/sbin/useradd -r -c "freeswitch" -g freeswitch freeswitch
     fi
 
+    #Download Deps and install deps
+    cd /usr/src
+    apt -y install git yasm nasm libavformat-dev libswscale-dev
+    git clone https://github.com/innotelinc/spandsp.git
+    cd spandsp
+    ./bootstrap.sh && ./configure && make && make install
+    ldconfig
+    cd ..
+    git clone https://github.com/innotelinc/sofia-sip.git
+    cd sofia-sip
+    ./bootstrap.sh && ./configure && make && make install
+    ldconfig
+    cd ..
+    git clone https://github.com/innotelinc/libks.git
+    cd libks
+    cmake .
+    make
+    make install
+    cd ..
+    git clone https://github.com/innotelinc/signalwire-c.git
+    cd signalwire-c
+    cmake .
+    make
+    make install
+
     #Download and install FS from git repository.
     cd $FS_BASE_PATH
     rm -rf freeswitch

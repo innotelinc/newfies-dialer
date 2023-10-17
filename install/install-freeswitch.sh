@@ -62,8 +62,8 @@ func_install_deps() {
     echo "Setting up Prerequisites and Dependencies for FreeSWITCH"
     case $DIST in
         'DEBIAN')
-            apt-get -y update
-            apt-get -y install locales-all
+            apt -yo Acquire::Check-Valid-Until=false update
+            apt -yo Acquire::Check-Valid-Until=false install locales-all
 
             export LANGUAGE=en_US.UTF-8
             export LANG=en_US.UTF-8
@@ -73,21 +73,21 @@ func_install_deps() {
             locale-gen fr_FR.UTF-8
             locale-gen pt_BR.UTF-8
 
-            apt-get -y install unzip zip sox sqlite3 ncftp nmap
-            apt-get -y install autoconf2.64 automake autotools-dev binutils bison build-essential cpp curl flex gcc libaudiofile-dev libc6-dev libexpat1 libexpat1-dev mcrypt libmcrypt-dev libnewt-dev libpopt-dev libsctp-dev libx11-dev libxml2 libxml2-dev lksctp-tools lynx m4 openssl ssl-cert zlib1g-dev
+            apt -yo Acquire::Check-Valid-Until=false install unzip zip sox sqlite3 ncftp nmap
+            apt -yo Acquire::Check-Valid-Until=false install autoconf2.64 automake autotools-dev binutils bison build-essential cpp curl flex gcc libaudiofile-dev libc6-dev libexpat1 libexpat1-dev mcrypt libmcrypt-dev libnewt-dev libpopt-dev libsctp-dev libx11-dev libxml2 libxml2-dev lksctp-tools lynx m4 openssl ssl-cert zlib1g-dev
 
-            apt-get -y install autoconf automake devscripts gawk g++ git-core 'libjpeg-dev|libjpeg62-turbo-dev' libncurses5-dev 'libtool-bin|libtool' make python-dev gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
+            apt -yo Acquire::Check-Valid-Until=false install autoconf automake devscripts gawk g++ git-core 'libjpeg-dev|libjpeg62-turbo-dev' libncurses5-dev 'libtool-bin|libtool' make python-dev gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
 
             if [ $DEBIANCODE != "jessie" ]; then
                 #DEBIAN7
-                apt-get -y install libgnutls-dev libtiff4-dev libtiff4
+                apt -yo Acquire::Check-Valid-Until=false install libgnutls-dev libtiff4-dev libtiff4
             else
                 #DEBIAN8
-                apt-get -y install libgnutls28-dev libtiff5-dev libtiff5
+                apt -yo Acquire::Check-Valid-Until=false install libgnutls28-dev libtiff5-dev libtiff5
             fi
-            apt-get -y install libvorbis0a libogg0 libogg-dev libvorbis-dev
-            apt-get -y install flite flite1-dev
-            apt-get -y install unixodbc-dev odbc-postgresql
+            apt -yo Acquire::Check-Valid-Until=false install libvorbis0a libogg0 libogg-dev libvorbis-dev
+            apt -yo Acquire::Check-Valid-Until=false install flite flite1-dev
+            apt -yo Acquire::Check-Valid-Until=false install unixodbc-dev odbc-postgresql
             ;;
         'CENTOS')
             yum -y update
@@ -175,10 +175,10 @@ install_fs_deb_packages() {
     #install Dependencies
     func_install_deps
 
-    apt-get -y install freeswitch-meta-vanilla
-    apt-get -y install freeswitch-mod-vmd freeswitch-mod-python freeswitch-mod-sndfile freeswitch-sounds-en
-    apt-get -y install libfreeswitch-dev freeswitch-mod-lua freeswitch-mod-flite
-    apt-get -y install freeswitch-mod-esl freeswitch-mod-event-socket freeswitch-mod-curl
+    apt -yo Acquire::Check-Valid-Until=false install freeswitch-meta-vanilla
+    apt -yo Acquire::Check-Valid-Until=false install freeswitch-mod-vmd freeswitch-mod-python freeswitch-mod-sndfile freeswitch-sounds-en
+    apt -yo Acquire::Check-Valid-Until=false install libfreeswitch-dev freeswitch-mod-lua freeswitch-mod-flite
+    apt -yo Acquire::Check-Valid-Until=false install freeswitch-mod-esl freeswitch-mod-event-socket freeswitch-mod-curl
 }
 
 func_install_luasql() {

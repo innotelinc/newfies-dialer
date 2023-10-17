@@ -177,7 +177,7 @@ func_install_dependencies(){
             #Used by PostgreSQL
             echo "deb http://apt.postgresql.org/pub/repos/apt/ $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list
             wget --no-check-certificate --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc|apt-key add -
-            apt -yo Acquire::Check-Valid-Until=false update
+            apt -y --allow-unauthenticated  update
 
             export LANGUAGE=en_US.UTF-8
             export LANG=en_US.UTF-8
@@ -188,31 +188,31 @@ func_install_dependencies(){
             locale-gen pt_BR.UTF-8
             #dpkg-reconfigure locales
 
-            apt -yo Acquire::Check-Valid-Until=false remove apache2.2-common apache2
-            apt -yo Acquire::Check-Valid-Until=false install sudo curl
-            apt -yo Acquire::Check-Valid-Until=false install hdparm htop vim
+            apt -y --allow-unauthenticated remove apache2.2-common apache2
+            apt -y --allow-unauthenticated install sudo curl
+            apt -y --allow-unauthenticated install hdparm htop vim
             update-alternatives --set editor /usr/bin/vim.tiny
 
             #Install Postgresql
-            apt -yo Acquire::Check-Valid-Until=false install libpq-dev
-            apt -yo Acquire::Check-Valid-Until=false install postgresql-9.3 postgresql-contrib-9.3
+            apt -y --allow-unauthenticated install libpq-dev
+            apt -y --allow-unauthenticated install postgresql-9.3 postgresql-contrib-9.3
             pg_createcluster 9.3 main --start
             /etc/init.d/postgresql start
 
-            apt -yo Acquire::Check-Valid-Until=false install python-software-properties
-            apt -yo Acquire::Check-Valid-Until=false install python-setuptools python-dev build-essential
-            apt -yo Acquire::Check-Valid-Until=false install nginx supervisor
-            apt -yo Acquire::Check-Valid-Until=false install git-core mercurial gawk cmake
-            apt -yo Acquire::Check-Valid-Until=false install python-pip
+            apt -y --allow-unauthenticated install python-software-properties
+            apt -y --allow-unauthenticated install python-setuptools python-dev build-essential
+            apt -y --allow-unauthenticated install nginx supervisor
+            apt -y --allow-unauthenticated install git-core mercurial gawk cmake
+            apt -y --allow-unauthenticated install python-pip
             # for audiofile convertion
-            apt -yo Acquire::Check-Valid-Until=false install libsox-fmt-mp3 libsox-fmt-all mpg321
+            apt -y --allow-unauthenticated install libsox-fmt-mp3 libsox-fmt-all mpg321
             #repeat flite install in case FS is on a different server
-            apt -yo Acquire::Check-Valid-Until=false install flite
+            apt -y --allow-unauthenticated install flite
 
             #Install Node.js & NPM
-            apt -yo Acquire::Check-Valid-Until=false install nodejs-legacy
+            apt -y --allow-unauthenticated install nodejs-legacy
             curl -sL https://deb.nodesource.com/setup | bash -
-            apt -yo Acquire::Check-Valid-Until=false nodejs
+            apt -y --allow-unauthenticated nodejs
 
             # cd /usr/src/ ; git clone https://github.com/joyent/node.git
             # # 'git tag' shows all available versions: select the latest stable.
@@ -224,12 +224,12 @@ func_install_dependencies(){
             # node -v
 
             #Lua Deps
-            apt -yo Acquire::Check-Valid-Until=false install lua5.2 liblua5.2-dev
+            apt -y --allow-unauthenticated install lua5.2 liblua5.2-dev
 
             #needed by lua-curl
-            apt -yo Acquire::Check-Valid-Until=false install libcurl4-openssl-dev
+            apt -y --allow-unauthenticated install libcurl4-openssl-dev
             #Memcached
-            apt -yo Acquire::Check-Valid-Until=false install memcached
+            apt -y --allow-unauthenticated install memcached
         ;;
         'CENTOS')
             yum -y groupinstall "Development Tools"
@@ -915,8 +915,8 @@ func_install_rabbitmq() {
                 echo "deb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
                 wget --no-check-certificate --quiet -O - http://www.rabbitmq.com/rabbitmq-signing-key-public.asc | apt-key add -
             fi
-            apt -yo Acquire::Check-Valid-Until=false update
-            apt -yo Acquire::Check-Valid-Until=false install rabbitmq-server
+            apt -y --allow-unauthenticated update
+            apt -y --allow-unauthenticated install rabbitmq-server
             /usr/sbin/rabbitmq-plugins enable rabbitmq_management
             # echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
 
@@ -953,8 +953,8 @@ func_install_redis() {
             echo "deb http://packages.dotdeb.org $DEBIANCODE all" > /etc/apt/sources.list.d/dotdeb.list
             echo "deb-src http://packages.dotdeb.org $DEBIANCODE all" >> /etc/apt/sources.list.d/dotdeb.list
             wget --no-check-certificate --quiet -O - http://www.dotdeb.org/dotdeb.gpg | apt-key add -
-            apt -yo Acquire::Check-Valid-Until=false update
-            apt -yo Acquire::Check-Valid-Until=false install redis-server
+            apt -y --allow-unauthenticated update
+            apt -y --allow-unauthenticated install redis-server
             /etc/init.d/redis-server restart
         ;;
         'CENTOS')

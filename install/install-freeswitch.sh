@@ -107,8 +107,8 @@ func_install_fs_sources() {
 
     #Download Deps and install deps
     cd /usr/src
+    apt -y install git yasm nasm libavformat-dev libswscale-dev libopus-dev libshout3-dev libmpg123-dev curl
     curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | python
-    apt -y install git yasm nasm libavformat-dev libswscale-dev libopus-dev
     git clone https://github.com/innotelinc/spandsp.git
     cd spandsp
     ./bootstrap.sh && ./configure && make && make install

@@ -46,7 +46,7 @@ fi
 func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
-        apt-get -y install lsb-release
+        apt -yo Acquire::Check-Valid-Until=false install lsb-release
         if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "focal" ]; then
             echo $SCRIPT_NOTICE
             exit 255
@@ -109,8 +109,8 @@ echo ""
 
 case $DIST in
     'DEBIAN')
-        apt-get -y update
-        apt-get -y install vim git-core
+        apt -yo Acquire::Check-Valid-Until=false update
+        apt -yo Acquire::Check-Valid-Until=false install vim git-core
     ;;
     'CENTOS')
 		func_install_epel_repo

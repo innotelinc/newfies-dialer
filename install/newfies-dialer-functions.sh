@@ -168,8 +168,8 @@ func_install_dependencies(){
                 echo "deb [check-valid-until=no] http://archive.debian.org/debian $DEBIANCODE-backports main" >> /etc/apt/sources.list
             fi
             #Used by PostgreSQL
-            echo "deb https://apt-archive.postgresql.org/pub/repos/apt/dists $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-            echo "deb-src https://apt-archive.postgresql.org/pub/repos/apt $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+            echo "deb https://apt.postgresql.org/pub/repos/apt $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+            echo "deb-src https://apt.postgresql.org/pub/repos/apt $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list
             wget --no-check-certificate --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc|apt-key add -
             apt -y --allow-unauthenticated  update
 

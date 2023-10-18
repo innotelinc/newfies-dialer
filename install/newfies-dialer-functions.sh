@@ -194,7 +194,7 @@ func_install_dependencies(){
             /etc/init.d/postgresql start
 
             apt -y --allow-unauthenticated install python-software-properties
-            apt -y --allow-unauthenticated install python-setuptools python-dev build-essential
+            apt -y --allow-unauthenticated install python-setuptools python2-dev build-essential
             apt -y --allow-unauthenticated install nginx supervisor
             apt -y --allow-unauthenticated install git-core mercurial gawk cmake
             apt -y --allow-unauthenticated install python-pip

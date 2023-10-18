@@ -107,7 +107,7 @@ func_install_fs_sources() {
 
     #Download Deps and install deps
     cd /usr/src
-    apt -y install git yasm nasm libavformat-dev libswscale-dev libopus-dev libshout3-dev libmpg123-dev curl lua-sec postgresql-contrib postgresql apt-transport-https uuid uuid-dev sudo python2 python2-dev libsqlite3-dev
+    apt -y install git yasm nasm libavformat-dev libswscale-dev libopus-dev libshout3-dev libmpg123-dev curl lua-sec postgresql-contrib postgresql apt-transport-https uuid uuid-dev sudo python2 python2-dev libsqlite3-dev libpcre3 libpcre3-dev libedit-dev
     update-alternatives --install /usr/bin/python python /usr/bin/python2 1
     update-alternatives --install /usr/bin/python python /usr/bin/python2 1
     curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | python2
@@ -123,15 +123,19 @@ func_install_fs_sources() {
     cd ..
     git clone https://github.com/innotelinc/libks.git
     cd libks
-    cmake .
-    make
-    make install
+    cmake . && make && make install
     cd ..
     git clone https://github.com/innotelinc/signalwire-c.git
     cd signalwire-c
-    cmake .
-    make
-    make install
+    cmake . && make && make install
+    cd ..
+    git clone https://github.com/xiph/speex.git
+    cd speex
+    ./autogen.sh && ./configure && make && make install
+    cd ..
+    git clone https://github.com/xiph/speexdsp.git
+    cd speexdsp
+    ./autogen.sh && ./configure && make && make install
 
     #Download and install FS from git repository.
     cd $FS_BASE_PATH

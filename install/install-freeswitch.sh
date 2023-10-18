@@ -72,7 +72,7 @@ func_install_deps() {
             apt -y --allow-unauthenticated install unzip zip sox sqlite3 ncftp nmap
             apt -y --allow-unauthenticated install autoconf2.64 automake autotools-dev binutils bison build-essential cpp curl flex gcc libaudiofile-dev libc6-dev libexpat1 libexpat1-dev mcrypt libmcrypt-dev libnewt-dev libpopt-dev libsctp-dev libx11-dev libxml2 libxml2-dev lksctp-tools lynx m4 openssl ssl-cert zlib1g-dev
 
-            apt -y --allow-unauthenticated install autoconf automake devscripts gawk g++ git-core libjpeg-dev libjpeg8-dev libncurses5-dev libtool-bin libtool make python-dev gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
+            apt -y --allow-unauthenticated install autoconf automake devscripts gawk g++ git-core libjpeg-dev libjpeg8-dev libncurses5-dev libtool-bin libtool make python2-dev gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
 
             apt -y --allow-unauthenticated install libgnutls28-dev libtiff5-dev libtiff5
             apt -y --allow-unauthenticated install libvorbis0a libogg0 libogg-dev libvorbis-dev

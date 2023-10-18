@@ -218,8 +218,8 @@ func_install_dependencies(){
             # node -v
 
             #Lua Deps
-            apt -y --allow-unauthenticated install lua5.2 liblua5.2-dev
-
+            apt -y --allow-unauthenticated install lua5.2 liblua5.2-dev luarocks
+            luarocks install luaxml
             #needed by lua-curl
             apt -y --allow-unauthenticated install libcurl4-openssl-dev
             #Memcached

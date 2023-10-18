@@ -46,7 +46,7 @@ SCRIPT_NOTICE="This install script is only intended to run on Debian 7.X or 8.X"
 func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
-        if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "jessie" ] && [ "$(lsb_release -cs)" != "bookworm" ] && [ "$(lsb_release -cs)" != "focal" ]  && [ "$(lsb_release -cs)" != "jammy" ]; then
+        if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "jessie" ] && [ "$(lsb_release -cs)" != "buster" ] && [ "$(lsb_release -cs)" != "bookworm" ] && [ "$(lsb_release -cs)" != "focal" ]  && [ "$(lsb_release -cs)" != "jammy" ]; then
             echo $SCRIPT_NOTICE
             exit 255
         fi

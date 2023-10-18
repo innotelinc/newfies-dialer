@@ -165,7 +165,7 @@ func_install_dependencies(){
             if [ $chk -lt 1 ] ; then
                 echo "Setup new sources.list entries"
                 #Used by Node.js
-                echo "deb http://ftp.us.debian.org/debian $DEBIANCODE-backports main" >> /etc/apt/sources.list
+                echo "deb [check-valid-until=no] http://archive.debian.org/debian $DEBIANCODE-backports main" >> /etc/apt/sources.list
             fi
             #Used by PostgreSQL
             echo "deb https://apt-archive.postgresql.org/pub/repos/apt $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list

@@ -58,7 +58,7 @@ func_install_deps() {
     echo "Setting up Prerequisites and Dependencies for FreeSWITCH"
     case $DIST in
         'DEBIAN')
-            apt -y --allow-unauthenticated update
+            apt --allow-unauthenticated update
             apt -y --allow-unauthenticated install locales-all
 
             export LANGUAGE=en_US.UTF-8

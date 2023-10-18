@@ -189,7 +189,7 @@ func_install_dependencies(){
 
             #Install Postgresql
             apt -y --allow-unauthenticated install libpq-dev
-            apt -y --allow-unauthenticated install postgresql-9.3 postgresql-contrib-9.3
+            apt -y --allow-unauthenticated install postgresql postgresql-contrib
             pg_createcluster 9.3 main --start
             /etc/init.d/postgresql start
 

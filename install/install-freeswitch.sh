@@ -157,6 +157,7 @@ func_install_fs_sources() {
     echo ""
     echo "Running ./bootstrap.sh -j"
     echo ""
+    autoupdate
     ./bootstrap.sh -j
 
     # !!! virtual memory exhausted: Cannot allocate memory !!!

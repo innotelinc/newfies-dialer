@@ -205,7 +205,7 @@ func_install_dependencies(){
             #Install Node.js & NPM
             apt -y --allow-unauthenticated install nodejs-legacy
             curl -sL https://deb.nodesource.com/setup_18.x | bash -
-            apt -y --allow-unauthenticated nodejs
+            apt -y --allow-unauthenticated nodejs npm
 
             # cd /usr/src/ ; git clone https://github.com/joyent/node.git
             # # 'git tag' shows all available versions: select the latest stable.

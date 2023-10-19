@@ -182,7 +182,7 @@ func_install_dependencies(){
             locale-gen pt_BR.UTF-8
             #dpkg-reconfigure locales
 
-            apt -y --allow-unauthenticated remove apache2.2-common apache2
+            apt -y --allow-unauthenticated remove apache2
             apt -y --allow-unauthenticated install sudo curl
             apt -y --allow-unauthenticated install hdparm htop vim
             update-alternatives --set editor /usr/bin/vim.tiny
@@ -190,14 +190,13 @@ func_install_dependencies(){
             #Install Postgresql
             apt -y --allow-unauthenticated install libpq-dev
             apt -y --allow-unauthenticated install postgresql postgresql-contrib
-            pg_createcluster 9.3 main --start
+            pg_createcluster 15 main --start
             /etc/init.d/postgresql start
 
-            apt -y --allow-unauthenticated install python-software-properties
-            apt -y --allow-unauthenticated install python-setuptools python2-dev build-essential
+            apt -y --allow-unauthenticated install build-essential
             apt -y --allow-unauthenticated install nginx supervisor
-            apt -y --allow-unauthenticated install git-core mercurial gawk cmake
-            apt -y --allow-unauthenticated install python-pip
+            apt -y --allow-unauthenticated install git mercurial gawk cmake
+            apt -y --allow-unauthenticated install python3-pip
             # for audiofile convertion
             apt -y --allow-unauthenticated install libsox-fmt-mp3 libsox-fmt-all mpg321 mpg123
             #repeat flite install in case FS is on a different server
@@ -205,7 +204,7 @@ func_install_dependencies(){
 
             #Install Node.js & NPM
             apt -y --allow-unauthenticated install nodejs-legacy
-            curl -sL https://deb.nodesource.com/setup | bash -
+            curl -sL https://deb.nodesource.com/setup_18.x | bash -
             apt -y --allow-unauthenticated nodejs
 
             # cd /usr/src/ ; git clone https://github.com/joyent/node.git

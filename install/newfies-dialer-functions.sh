@@ -499,7 +499,7 @@ func_install_pip_deps(){
     for line in $(cat /usr/src/newfies-dialer/requirements/django.txt | grep -v \#)
     do
         echo "pip install $line"
-        pip install $line --allow-all-external --allow-unverified django-admin-tools
+        pip install $line django-admin-tools
     done
     echo "Install Test requirements..."
     for line in $(cat /usr/src/newfies-dialer/requirements/test.txt | grep -v \#)

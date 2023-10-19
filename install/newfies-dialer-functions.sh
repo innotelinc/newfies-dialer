@@ -389,8 +389,8 @@ func_setup_virtualenv() {
         ;;
     esac
 
-    pipx install virtualenv
-    pipx install virtualenvwrapper
+    pip install virtualenv
+    pip install virtualenvwrapper
 
     # Enable virtualenvwrapper
     chk=`grep "virtualenvwrapper" ~/.bashrc|wc -l`
@@ -481,30 +481,30 @@ func_install_pip_deps(){
     echo "func_install_pip_deps..."
 
     #Upgrade pip to latest (1.5)
-    pipx install pip --upgrade
+    pip install pip --upgrade
 
     #pip now only installs stable versions by default, so we need to use --pre option
-    pipx install --pre pytz
+    pip install --pre pytz
     #For python 2.6 only
     #pip install importlib
 
     echo "Install Basic requirements..."
     for line in $(cat /usr/src/newfies-dialer/requirements/basic.txt | grep -v \#)
     do
-        echo "pipx install $line"
-        pipx install $line
+        echo "pip install $line"
+        pip install $line
     done
     echo "Install Django requirements..."
     for line in $(cat /usr/src/newfies-dialer/requirements/django.txt | grep -v \#)
     do
-        echo "pipx install $line"
-        pipx install $line
+        echo "pip install $line"
+        pip install $line
     done
     echo "Install Test requirements..."
     for line in $(cat /usr/src/newfies-dialer/requirements/test.txt | grep -v \#)
     do
-        echo "pipx install $line"
-        pipx install $line
+        echo "pip install $line"
+        pip install $line
     done
 
     #Install Python ESL / this needs to be done within the virtualenv
@@ -688,7 +688,7 @@ func_nginx_supervisor(){
     case $DIST in
         'DEBIAN')
             #Install Supervisor
-            pipx install supervisor
+            pip install supervisor
 
             cp /usr/src/newfies-dialer/install/supervisor/gunicorn_newfies_dialer.conf /etc/supervisor/conf.d/
             # cp /usr/src/newfies-dialer/install/supervisor/debian/supervisord /etc/init.d/supervisor

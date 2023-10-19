@@ -107,7 +107,7 @@ func_install_fs_sources() {
 
     #Download Deps and install deps
     cd /usr/src
-    #apt -y install git yasm nasm pkg-config libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libswscale-dev libswresample-dev libavfilter-dev libopus-dev libshout3-dev libmpg123-dev curl lua-sec postgresql-contrib postgresql apt-transport-https uuid uuid-dev sudo python3-dev libsqlite3-dev libpcre3 libpcre3-dev libedit-dev libsndfile-dev libmp3lame-dev libldns-dev php-dev uuid uuid-dev python3-pip libtiff-dev
+    #apt -y install git yasm nasm pkg-config libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libswscale-dev libswresample-dev libavfilter-dev libopus-dev libshout3-dev libmpg123-dev curl lua-sec postgresql-contrib postgresql apt-transport-https uuid uuid-dev sudo python3-dev libsqlite3-dev libpcre3 libpcre3-dev libedit-dev libsndfile-dev libmp3lame-dev libldns-dev php-dev uuid uuid-dev python3-pip libtiff-dev pipx
     #update-alternatives --install /usr/bin/python python /usr/bin/python2 1
     #update-alternatives --install /usr/bin/python python /usr/bin/python2 1
     #curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | python2

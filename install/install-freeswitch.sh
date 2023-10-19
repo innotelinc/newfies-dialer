@@ -72,7 +72,7 @@ func_install_deps() {
             apt -y --allow-unauthenticated install unzip zip sox sqlite3 ncftp nmap
             apt -y --allow-unauthenticated install autoconf2.64 automake autotools-dev binutils bison build-essential cpp curl flex gcc libaudiofile-dev libc6-dev libexpat1 libexpat1-dev mcrypt libmcrypt-dev libnewt-dev libpopt-dev libsctp-dev libx11-dev libxml2 libxml2-dev lksctp-tools lynx m4 openssl ssl-cert zlib1g-dev
 
-            apt -y --allow-unauthenticated install autoconf automake devscripts gawk g++ git libjpeg62-turbo-dev libjpeg-dev libjpeg8-dev libncurses5-dev libtool-bin libtool make python2-dev gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
+            apt -y --allow-unauthenticated install autoconf automake devscripts gawk g++ git libjpeg62-turbo-dev libjpeg-dev libncurses5-dev libtool-bin libtool make python2-dev gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
 
             apt -y --allow-unauthenticated install libgnutls28-dev libtiff5-dev libtiff5
             apt -y --allow-unauthenticated install libvorbis0a libogg0 libogg-dev libvorbis-dev
@@ -107,6 +107,7 @@ func_install_fs_sources() {
 
     #Download Deps and install deps
     cd /usr/src
+    apt -y install yasm libcurl4-gnutls-dev libexpat1-dev gettext zlib1g-dev libssl-dev uuid-dev libjpeg62-turbo-dev libtiff-dev libsqlite3-dev libpcre3-dev libldns-dev php php-dev
     #apt -y install git yasm nasm pkg-config libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libswscale-dev libswresample-dev libavfilter-dev libopus-dev libshout3-dev libmpg123-dev curl lua-sec postgresql-contrib postgresql apt-transport-https uuid uuid-dev sudo python3-dev libsqlite3-dev libpcre3 libpcre3-dev libedit-dev libsndfile-dev libmp3lame-dev libldns-dev php-dev uuid uuid-dev python3-pip libtiff-dev pipx
     #update-alternatives --install /usr/bin/python python /usr/bin/python2 1
     #update-alternatives --install /usr/bin/python python /usr/bin/python2 1
@@ -157,9 +158,9 @@ func_install_fs_sources() {
     echo ""
     echo "Running ./bootstrap.sh -j"
     echo ""
-    autoupdate
     ./bootstrap.sh -j
-
+    autoupdate
+    
     # !!! virtual memory exhausted: Cannot allocate memory !!!
     # we need to make more temporary swap space
     #

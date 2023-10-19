@@ -130,7 +130,7 @@ func_check_dependencies() {
     echo ""
 
     #Check Django
-    grep_pip=`pip freeze| grep Django`
+    grep_pip=`pip3 freeze| grep Django`
     if echo $grep_pip | grep -i "Django" > /dev/null ; then
         echo "OK : Django installed..."
     else
@@ -139,7 +139,7 @@ func_check_dependencies() {
     fi
 
     #Check Celery
-    grep_pip=`pip freeze| grep celery`
+    grep_pip=`pip3 freeze| grep celery`
     if echo $grep_pip | grep -i "celery" > /dev/null ; then
         echo "OK : celery installed..."
     else
@@ -359,8 +359,8 @@ func_install_dependencies(){
     cp cURL.so /usr/local/lib/lua/5.2/
 
     echo ""
-    echo "easy_install -U setuptools pip distribute"
-    easy_install -U setuptools pip distribute
+    echo "easy_install -U setuptools pip3 distribute"
+    easy_install -U setuptools pip3 distribute
 
     # install Bower
     npm install -g bower

@@ -8,18 +8,18 @@ uuid
 #redis==2.9.1
 #Don't upgrade redis if we don't have redis-server>=2.6 installed
 redis==2.10.3
-celery==5.2.2
+celery==4.4.7
 pytz==2015.7
 kombu
 mimeparse==0.1.3
 psycopg2
 beautifulsoup4
-Pygments==2.7.4
+Pygments==2.5.2
 python-memcached==1.54
 feedparser==5.1.3
 python-acapela==0.2.4
 python-msspeak==0.1.3
-Django==2.2.24
+Django==1.11.29
 gunicorn==19.3.0
 tablib==0.10.0
 requests==2.7.0

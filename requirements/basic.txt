@@ -14,7 +14,7 @@ pytz==2015.7
 mimeparse==0.1.3
 psycopg2==2.8.6
 BeautifulSoup4
-Pygments==2.14
+Pygments
 python-memcached==1.54
 feedparser==5.1.3
 python-acapela==0.2.4

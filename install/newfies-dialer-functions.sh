@@ -114,11 +114,11 @@ func_install_landing_page() {
             cp /usr/src/newfies-dialer/install/nginx/sites-available/newfies_dialer.conf /etc/nginx/sites-available/
             ln -s /etc/nginx/sites-available/newfies_dialer.conf /etc/nginx/sites-enabled/newfies_dialer.conf
             #Remove default NGINX landing page
-            rm /etc/nginx/sites-enabled/default
+            #rm /etc/nginx/sites-enabled/default
         ;;
         'CENTOS')
             cp /usr/src/newfies-dialer/install/nginx/sites-available/newfies_dialer.conf /etc/nginx/conf.d/
-            rm /etc/nginx/conf.d/default.conf
+            #rm /etc/nginx/conf.d/default.conf
         ;;
     esac
 
@@ -460,7 +460,7 @@ func_install_source(){
     rm -rf newfies-dialer
     mkdir /var/log/newfies
 
-    git clone -b $BRANCH git://github.com/newfies-dialer/newfies-dialer.git
+    git clone https://github.com/innotelinc/newfies-dialer.git
     cd newfies-dialer
 
     #Install branch develop / callcenter

@@ -30,7 +30,7 @@ fi
 
 #Get Scripts dependencies
 #Include cdr-stats install functions
-source ../newfies-dialer-functions.sh
+source $PWD/install/newfies-dialer-functions.sh
 
 
 #Menu Section for Script

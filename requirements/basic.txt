@@ -24,4 +24,4 @@ gunicorn==19.3.0
 tablib==0.10.0
 requests==2.25
 lockfile==0.10.2
-librabbitmq==1.6.1
+git+https://github.com/innotelinc/librabbitmq.git

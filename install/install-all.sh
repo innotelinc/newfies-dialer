@@ -124,9 +124,9 @@ esac
 
 if [ $INSTALL_FS = "yes" ]; then
     #Install Freeswitch
-    bash install-freeswitch.sh
+    bash $PWD/install/install-freeswitch.sh
     /etc/init.d/freeswitch start
 fi
 
 #Install Newfies
-bash install-newfies.sh
+bash $PWD/install/install-newfies.sh

@@ -13,6 +13,16 @@
 # Arezqui Belaid <info@star2billing.com>
 #
 
+#
+# To download and run the script on your server :
+#
+# >> Install with Master script :
+# cd /usr/src/ ; rm install-newfies.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/master/install/install-newfies.sh ; chmod +x install-newfies.sh ; ./install-newfies.sh
+#
+# >> Install with develop script :
+# cd /usr/src/ ; rm install-newfies.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/develop/install/install-newfies.sh ; chmod +x install-newfies.sh ; ./install-newfies.sh
+#
+
 # Set branch to install develop / default: master
 if [ -z "${BRANCH}" ]; then
     BRANCH='master'
@@ -42,7 +52,6 @@ export LANG="en_US.UTF-8"
 SCRIPT_NOTICE="This install script is only intended to run on Debian 7.X or 8.X"
 
 # Identify Linux Distribution type
-# Changed to Debian 10 and Ubuntu 20
 func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
@@ -130,7 +139,7 @@ func_check_dependencies() {
     echo ""
 
     #Check Django
-    grep_pip=`pip3 freeze| grep Django`
+    grep_pip=`pip freeze| grep Django`
     if echo $grep_pip | grep -i "Django" > /dev/null ; then
         echo "OK : Django installed..."
     else
@@ -139,7 +148,7 @@ func_check_dependencies() {
     fi
 
     #Check Celery
-    grep_pip=`pip3 freeze| grep celery`
+    grep_pip=`pip freeze| grep celery`
     if echo $grep_pip | grep -i "celery" > /dev/null ; then
         echo "OK : celery installed..."
     else
@@ -165,13 +174,12 @@ func_install_dependencies(){
             if [ $chk -lt 1 ] ; then
                 echo "Setup new sources.list entries"
                 #Used by Node.js
-                echo "deb [check-valid-until=no] http://archive.debian.org/debian $DEBIANCODE-backports main" >> /etc/apt/sources.list
+                echo "deb http://ftp.us.debian.org/debian $DEBIANCODE-backports main" >> /etc/apt/sources.list
             fi
             #Used by PostgreSQL
-            echo "deb https://apt.postgresql.org/pub/repos/apt $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-            echo "deb-src https://apt.postgresql.org/pub/repos/apt $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+            echo "deb http://apt.postgresql.org/pub/repos/apt/ $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list
             wget --no-check-certificate --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc|apt-key add -
-            apt -y --allow-unauthenticated  update
+            apt-get update
 
             export LANGUAGE=en_US.UTF-8
             export LANG=en_US.UTF-8
@@ -182,30 +190,31 @@ func_install_dependencies(){
             locale-gen pt_BR.UTF-8
             #dpkg-reconfigure locales
 
-            apt -y --allow-unauthenticated remove apache2
-            apt -y --allow-unauthenticated install sudo curl
-            apt -y --allow-unauthenticated install hdparm htop vim
+            apt-get -y remove apache2.2-common apache2
+            apt-get -y install sudo curl
+            apt-get -y install hdparm htop vim
             update-alternatives --set editor /usr/bin/vim.tiny
 
             #Install Postgresql
-            apt -y --allow-unauthenticated install libpq-dev
-            apt -y --allow-unauthenticated install postgresql postgresql-contrib
-            pg_createcluster 15 main --start
+            apt-get -y install libpq-dev
+            apt-get -y install postgresql-9.3 postgresql-contrib-9.3
+            pg_createcluster 9.3 main --start
             /etc/init.d/postgresql start
 
-            apt -y --allow-unauthenticated install build-essential
-            apt -y --allow-unauthenticated install nginx supervisor
-            apt -y --allow-unauthenticated install git mercurial gawk cmake
-            apt -y --allow-unauthenticated install python3-pip
+            apt-get -y install python-software-properties
+            apt-get -y install python-setuptools python-dev build-essential
+            apt-get -y install nginx supervisor
+            apt-get -y install git-core mercurial gawk cmake
+            apt-get -y install python-pip
             # for audiofile convertion
-            apt -y --allow-unauthenticated install libsox-fmt-mp3 libsox-fmt-all mpg321 mpg123
+            apt-get -y install libsox-fmt-mp3 libsox-fmt-all mpg321
             #repeat flite install in case FS is on a different server
-            apt -y --allow-unauthenticated install flite
+            apt-get -y install flite
 
             #Install Node.js & NPM
-            apt -y --allow-unauthenticated install nodejs-legacy
-            curl -sL https://deb.nodesource.com/setup_18.x | bash -
-            apt -y --allow-unauthenticated nodejs npm
+            apt-get -y install nodejs-legacy
+            curl -sL https://deb.nodesource.com/setup | bash -
+            apt-get install -y nodejs
 
             # cd /usr/src/ ; git clone https://github.com/joyent/node.git
             # # 'git tag' shows all available versions: select the latest stable.
@@ -217,12 +226,12 @@ func_install_dependencies(){
             # node -v
 
             #Lua Deps
-            apt -y --allow-unauthenticated install lua5.2 liblua5.2-dev luarocks
-            luarocks install luaxml
+            apt-get -y install lua5.2 liblua5.2-dev
+
             #needed by lua-curl
-            apt -y --allow-unauthenticated install libcurl4-openssl-dev
+            apt-get -y install libcurl4-openssl-dev
             #Memcached
-            apt -y --allow-unauthenticated install memcached
+            apt-get -y install memcached
         ;;
         'CENTOS')
             yum -y groupinstall "Development Tools"
@@ -359,8 +368,8 @@ func_install_dependencies(){
     cp cURL.so /usr/local/lib/lua/5.2/
 
     echo ""
-    echo "easy_install -U setuptools pip3 distribute"
-    easy_install -U setuptools pip3 distribute
+    echo "easy_install -U setuptools pip distribute"
+    easy_install -U setuptools pip distribute
 
     # install Bower
     npm install -g bower
@@ -385,7 +394,7 @@ func_setup_virtualenv() {
         'CENTOS')
             SCRIPT_VIRTUALENVWRAPPER="/usr/bin/virtualenvwrapper.sh"
             #Upgrade Setuptools
-            pip3 install setuptools --no-use-wheel --upgrade
+            pip install setuptools --no-use-wheel --upgrade
         ;;
     esac
 
@@ -451,7 +460,7 @@ func_install_source(){
     rm -rf newfies-dialer
     mkdir /var/log/newfies
 
-    git clone https://github.com/innotelinc/newfies-dialer.git
+    git clone -b $BRANCH git://github.com/newfies-dialer/newfies-dialer.git
     cd newfies-dialer
 
     #Install branch develop / callcenter
@@ -486,7 +495,7 @@ func_install_pip_deps(){
     #pip now only installs stable versions by default, so we need to use --pre option
     pip install --pre pytz
     #For python 2.6 only
-    #pip install importlib
+    pip install importlib
 
     echo "Install Basic requirements..."
     for line in $(cat /usr/src/newfies-dialer/requirements/basic.txt | grep -v \#)
@@ -498,7 +507,7 @@ func_install_pip_deps(){
     for line in $(cat /usr/src/newfies-dialer/requirements/django.txt | grep -v \#)
     do
         echo "pip install $line"
-        pip install $line
+        pip install $line --allow-all-external --allow-unverified django-admin-tools
     done
     echo "Install Test requirements..."
     for line in $(cat /usr/src/newfies-dialer/requirements/test.txt | grep -v \#)
@@ -517,7 +526,7 @@ func_install_pip_deps(){
     echo "**********"
     echo "PIP Freeze"
     echo "**********"
-    pip3 freeze
+    pip freeze
 }
 
 
@@ -688,7 +697,7 @@ func_nginx_supervisor(){
     case $DIST in
         'DEBIAN')
             #Install Supervisor
-            pip install supervisor
+            #pip install supervisor
 
             cp /usr/src/newfies-dialer/install/supervisor/gunicorn_newfies_dialer.conf /etc/supervisor/conf.d/
             # cp /usr/src/newfies-dialer/install/supervisor/debian/supervisord /etc/init.d/supervisor
@@ -908,8 +917,8 @@ func_install_rabbitmq() {
                 echo "deb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
                 wget --no-check-certificate --quiet -O - http://www.rabbitmq.com/rabbitmq-signing-key-public.asc | apt-key add -
             fi
-            apt -y --allow-unauthenticated update
-            apt -y --allow-unauthenticated install rabbitmq-server
+            apt-get update
+            apt-get -y install rabbitmq-server
             /usr/sbin/rabbitmq-plugins enable rabbitmq_management
             # echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
 
@@ -946,8 +955,8 @@ func_install_redis() {
             echo "deb http://packages.dotdeb.org $DEBIANCODE all" > /etc/apt/sources.list.d/dotdeb.list
             echo "deb-src http://packages.dotdeb.org $DEBIANCODE all" >> /etc/apt/sources.list.d/dotdeb.list
             wget --no-check-certificate --quiet -O - http://www.dotdeb.org/dotdeb.gpg | apt-key add -
-            apt -y --allow-unauthenticated update
-            apt -y --allow-unauthenticated install redis-server
+            apt-get update
+            apt-get -y install redis-server
             /etc/init.d/redis-server restart
         ;;
         'CENTOS')

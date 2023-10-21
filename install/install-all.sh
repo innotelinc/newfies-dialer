@@ -13,6 +13,17 @@
 # Arezqui Belaid <info@star2billing.com>
 #
 
+#
+# To download and run the script on your server :
+# cd /usr/src/ ; rm install-all.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/master/install/install-all.sh ; chmod +x install-all.sh ; ./install-all.sh
+#
+#
+# To install develop branch:
+#
+# export BRANCH=develop; export INSTALL_FS=yes
+# cd /usr/src/ ; rm install-all.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/develop/install/install-all.sh ; chmod +x install-all.sh ; ./install-all.sh
+#
+
 # Set branch to install develop / default: master
 if [ -z "${BRANCH}" ]; then
     BRANCH='master'
@@ -35,7 +46,7 @@ fi
 func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
-        apt -y --allow-unauthenticated install lsb-release
+        apt-get -y install lsb-release
         if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "jessie" ] && [ "$(lsb_release -cs)" != "buster" ] && [ "$(lsb_release -cs)" != "bookworm" ] && [ "$(lsb_release -cs)" != "focal" ]  && [ "$(lsb_release -cs)" != "jammy" ]; then
             echo $SCRIPT_NOTICE
             exit 255
@@ -98,8 +109,8 @@ echo ""
 
 case $DIST in
     'DEBIAN')
-        apt -y --allow-unauthenticated update
-        apt -y --allow-unauthenticated install vim git nano
+        apt-get -y update
+        apt-get -y install vim git
     ;;
     'CENTOS')
 		func_install_epel_repo
@@ -113,13 +124,9 @@ esac
 
 if [ $INSTALL_FS = "yes" ]; then
     #Install Freeswitch
-    cd /usr/src/
-    wget --no-check-certificate  https://raw.githubusercontent.com/innotelinc/newfies-dialer/develop/install/install-freeswitch.sh -O install-freeswitch.sh
     bash install-freeswitch.sh
     /etc/init.d/freeswitch start
 fi
 
 #Install Newfies
-cd /usr/src/
-wget --no-check-certificate https://raw.githubusercontent.com/innotelinc/newfies-dialer/develop/install/install-newfies.sh -O install-newfies.sh
 bash install-newfies.sh

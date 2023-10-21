@@ -13,6 +13,10 @@
 # Arezqui Belaid <info@star2billing.com>
 #
 
+#
+# To download and run the script on your server :
+# cd /usr/src/ ; rm install-freeswitch.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/develop/install/install-freeswitch.sh ; chmod +x install-freeswitch.sh ; ./install-freeswitch.sh
+#
 
 # Set branch to install develop / default: master
 if [ -z "${BRANCH}" ]; then
@@ -29,7 +33,7 @@ CURRENT_PATH=$PWD
 KERNELARCH="x86_64"
 # Valid Freeswitch versions are : v1.2.stable
 #FS_VERSION=v1.2.stable
-FS_VERSION=v1.8
+FS_VERSION=v1.4
 SCRIPT_NOTICE="This script is only intended to run on Debian 64 bit 7.X or 8.X"
 
 # Identify Linux Distribution type
@@ -58,8 +62,8 @@ func_install_deps() {
     echo "Setting up Prerequisites and Dependencies for FreeSWITCH"
     case $DIST in
         'DEBIAN')
-            apt --allow-unauthenticated update
-            apt -y --allow-unauthenticated install locales-all
+            apt-get -y update
+            apt-get -y install locales-all
 
             export LANGUAGE=en_US.UTF-8
             export LANG=en_US.UTF-8
@@ -69,15 +73,21 @@ func_install_deps() {
             locale-gen fr_FR.UTF-8
             locale-gen pt_BR.UTF-8
 
-            apt -y --allow-unauthenticated install unzip zip sox sqlite3 ncftp nmap
-            apt -y --allow-unauthenticated install autoconf2.64 automake autotools-dev binutils bison build-essential cpp curl flex gcc libaudiofile-dev libc6-dev libexpat1 libexpat1-dev mcrypt libmcrypt-dev libnewt-dev libpopt-dev libsctp-dev libx11-dev libxml2 libxml2-dev lksctp-tools lynx m4 openssl ssl-cert zlib1g-dev
+            apt-get -y install unzip zip sox sqlite3 ncftp nmap
+            apt-get -y install autoconf2.64 automake autotools-dev binutils bison build-essential cpp curl flex gcc libaudiofile-dev libc6-dev libexpat1 libexpat1-dev mcrypt libmcrypt-dev libnewt-dev libpopt-dev libsctp-dev libx11-dev libxml2 libxml2-dev lksctp-tools lynx m4 openssl ssl-cert zlib1g-dev
 
-            apt -y --allow-unauthenticated install autoconf automake devscripts gawk g++ git libjpeg62-turbo-dev libjpeg-dev libncurses5-dev libtool-bin libtool make python2-dev gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
+            apt-get -y install autoconf automake devscripts gawk g++ git-core 'libjpeg-dev|libjpeg62-turbo-dev' libncurses5-dev 'libtool-bin|libtool' make python-dev gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
 
-            apt -y --allow-unauthenticated install libgnutls28-dev libtiff5-dev libtiff5
-            apt -y --allow-unauthenticated install libvorbis0a libogg0 libogg-dev libvorbis-dev
-            apt -y --allow-unauthenticated install flite flite1-dev
-            apt -y --allow-unauthenticated install unixodbc-dev odbc-postgresql
+            if [ $DEBIANCODE != "jessie" ]; then
+                #DEBIAN7
+                apt-get -y install libgnutls-dev libtiff4-dev libtiff4
+            else
+                #DEBIAN8
+                apt-get -y install libgnutls28-dev libtiff5-dev libtiff5
+            fi
+            apt-get -y install libvorbis0a libogg0 libogg-dev libvorbis-dev
+            apt-get -y install flite flite1-dev
+            apt-get -y install unixodbc-dev odbc-postgresql
             ;;
         'CENTOS')
             yum -y update
@@ -105,48 +115,6 @@ func_install_fs_sources() {
         /usr/sbin/useradd -r -c "freeswitch" -g freeswitch freeswitch
     fi
 
-    #Download Deps and install deps
-    cd /usr/src
-    apt -y install yasm libcurl4-gnutls-dev libexpat1-dev gettext zlib1g-dev libssl-dev uuid-dev libjpeg62-turbo-dev libtiff-dev libsqlite3-dev libpcre3-dev libldns-dev php php-dev
-    #apt -y install git yasm nasm pkg-config libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev libswscale-dev libswresample-dev libavfilter-dev libopus-dev libshout3-dev libmpg123-dev curl lua-sec postgresql-contrib postgresql apt-transport-https uuid uuid-dev sudo python3-dev libsqlite3-dev libpcre3 libpcre3-dev libedit-dev libsndfile-dev libmp3lame-dev libldns-dev php-dev uuid uuid-dev python3-pip libtiff-dev pipx
-    #update-alternatives --install /usr/bin/python python /usr/bin/python2 1
-    #update-alternatives --install /usr/bin/python python /usr/bin/python2 1
-    curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | python
-    #Install CMake 3.7.2 for Debian 8 & Ubuntu 20
-    wget https://cmake.org/files/v3.7/cmake-3.7.2.tar.gz
-    #Install for Ubuntu 22
-    ##wget https://cmake.org/files/v3.7/cmake-3.27.7.tar.gz
-    tar -zxf cmake-3.7.2.tar.gz
-    cd cmake-3.7.2
-    ./bootstrap.sh && ./configure && make && make install
-    ldconfig
-    cd ..
-    git clone https://github.com/innotelinc/spandsp.git
-    cd spandsp
-    ./bootstrap.sh && ./configure && make && make install
-    ldconfig
-    cd ..
-    git clone https://github.com/innotelinc/sofia-sip.git
-    cd sofia-sip
-    ./bootstrap.sh && ./configure && make && make install
-    ldconfig
-    cd ..
-    git clone https://github.com/innotelinc/libks.git
-    cd libks
-    cmake . && make && make install
-    cd ..
-    git clone https://github.com/innotelinc/signalwire-c.git
-    cd signalwire-c
-    cmake . && make && make install
-    cd ..
-    git clone https://github.com/xiph/speex.git
-    cd speex
-    ./autogen.sh && ./configure && make && make install
-    cd ..
-    git clone https://github.com/xiph/speexdsp.git
-    cd speexdsp
-    ./autogen.sh && ./configure && make && make install
-
     #Download and install FS from git repository.
     cd $FS_BASE_PATH
     rm -rf freeswitch
@@ -159,8 +127,7 @@ func_install_fs_sources() {
     echo "Running ./bootstrap.sh -j"
     echo ""
     ./bootstrap.sh -j
-    autoupdate
-    
+
     # !!! virtual memory exhausted: Cannot allocate memory !!!
     # we need to make more temporary swap space
     #
@@ -208,10 +175,10 @@ install_fs_deb_packages() {
     #install Dependencies
     func_install_deps
 
-    apt -y --allow-unauthenticated install freeswitch-meta-vanilla
-    apt -y --allow-unauthenticated install freeswitch-mod-vmd freeswitch-mod-python freeswitch-mod-sndfile freeswitch-sounds-en
-    apt -y --allow-unauthenticated install libfreeswitch-dev freeswitch-mod-lua freeswitch-mod-flite
-    apt -y --allow-unauthenticated install freeswitch-mod-esl freeswitch-mod-event-socket freeswitch-mod-curl
+    apt-get -y install freeswitch-meta-vanilla
+    apt-get -y install freeswitch-mod-vmd freeswitch-mod-python freeswitch-mod-sndfile freeswitch-sounds-en
+    apt-get -y install libfreeswitch-dev freeswitch-mod-lua freeswitch-mod-flite
+    apt-get -y install freeswitch-mod-esl freeswitch-mod-event-socket freeswitch-mod-curl
 }
 
 func_install_luasql() {

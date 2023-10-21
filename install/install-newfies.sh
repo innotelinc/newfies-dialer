@@ -16,8 +16,11 @@
 #
 # To download and run the script on your server :
 #
+# >> Install with Master script :
+# cd /usr/src/ ; rm install-newfies.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/master/install/install-newfies.sh ; chmod +x install-newfies.sh ; ./install-newfies.sh
+#
 # >> Install with develop script :
-# cd /usr/src/ ; rm install-newfies.sh ; wget --no-check-certificate https://raw.githubusercontent.com/innotelinc/newfies-dialer/develop/install/install-newfies.sh ; chmod +x install-newfies.sh ; ./install-newfies.sh
+# cd /usr/src/ ; rm install-newfies.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/develop/install/install-newfies.sh ; chmod +x install-newfies.sh ; ./install-newfies.sh
 #
 
 # Set branch to install develop / default: master
@@ -26,11 +29,8 @@ if [ -z "${BRANCH}" ]; then
 fi
 
 #Get Scripts dependencies
-cd /usr/src/
-rm newfies-dialer-functions.sh
-wget --no-check-certificate https://raw.githubusercontent.com/innotelinc/newfies-dialer/develop/install/newfies-dialer-functions.sh -O newfies-dialer-functions.sh
 #Include cdr-stats install functions
-source newfies-dialer-functions.sh
+source ../newfies-dialer-functions.sh
 
 
 #Menu Section for Script

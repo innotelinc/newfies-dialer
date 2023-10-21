@@ -22,6 +22,6 @@ python-msspeak==0.1.3
 Django
 gunicorn==19.3.0
 tablib==0.10.0
-requests
+requests=2.7.0
 lockfile==0.10.2
 git+https://github.com/innotelinc/librabbitmq.git

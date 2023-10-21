@@ -47,7 +47,7 @@ func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
         apt-get -y install lsb-release
-        if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "jessie" ] && [ "$(lsb_release -cs)" != "buster" ] && [ "$(lsb_release -cs)" != "bookworm" ] && [ "$(lsb_release -cs)" != "focal" ]  && [ "$(lsb_release -cs)" != "jammy" ]; then
+        if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "jessie" ] && [ "$(lsb_release -cs)" != "buster" ] && [ "$(lsb_release -cs)" != "bookworm" ] && [ "$(lsb_release -cs)" != "focal" ]  && [ "$(lsb_release -cs)" != "jammy" ] && [ "$(lsb_release -cs)" != "lunar" ]; then
             echo $SCRIPT_NOTICE
             exit 255
         fi

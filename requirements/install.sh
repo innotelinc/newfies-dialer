@@ -22,7 +22,7 @@ done
 echo "Install Django requirements..."
 for line in $(cat requirements/django.txt | grep -v \#)
 do
-    pip install $line django-admin-tools
+    pip install $line
 done
 
 echo "Install Dev requirements..."
@@ -35,4 +35,10 @@ echo "Install test requirements..."
 for line in $(cat requirements/test.txt | grep -v \#)
 do
     pip install $line
+done
+
+echo "Install nodeps requirements..."
+for line in $(cat requirements/nodeps.txt | grep -v \#)
+do
+    pip install $line --no-deps
 done

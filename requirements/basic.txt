@@ -10,7 +10,7 @@ celery
 pytz==2015.7
 #kombu==3.0.24
 mimeparse==0.1.3
-psycopg2==2.8.6
+psycopg2
 BeautifulSoup4
 Pygments
 python-memcached==1.54

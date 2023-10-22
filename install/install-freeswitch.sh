@@ -135,7 +135,7 @@ func_install_fs_sources() {
     # mkswap /root/fakeswap
     # swapon /root/fakeswap
 
-    ./configure --disable-libvpx --without-pgsql --enable-system-lua --with-python3 --enable-64 --sysconfdir=/etc/freeswitch/
+    ./configure --without-pgsql --prefix=/usr/local/freeswitch --sysconfdir=/etc/freeswitch --enable-system-lua --with-python3 --disable-libvpx --enable-64
     [ -f modules.conf ] && cp modules.conf modules.conf.bak
     sed -i -e \
     "s/#applications\/mod_curl/applications\/mod_curl/g" \

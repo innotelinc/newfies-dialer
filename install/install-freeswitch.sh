@@ -25,7 +25,7 @@ fi
 
 FS_CONF_PATH=https://raw.github.com/innotelinc/newfies-dialer/develop/install/freeswitch-conf
 FS_INIT_PATH=https://raw.github.com/innotelinc/newfies-dialer/develop/install/freeswitch-init
-FS_CONFIG_PATH=/etc/freeswitch/freeswitch
+FS_CONFIG_PATH=/etc/freeswitch
 FS_BASE_PATH=/usr/src
 CURRENT_PATH=$PWD
 # KERNELARCH=$(uname -m)
@@ -135,7 +135,7 @@ func_install_fs_sources() {
     # mkswap /root/fakeswap
     # swapon /root/fakeswap
 
-    ./configure --without-pgsql --prefix=/usr/local/freeswitch --sysconfdir=/etc/freeswitch --enable-system-lua --with-python3 --disable-libvpx --enable-64
+    ./configure --without-pgsql --prefix=/usr/local/freeswitch --sysconfdir=/etc/freeswitch --enable-system-lua --disable-libvpx
     [ -f modules.conf ] && cp modules.conf modules.conf.bak
     sed -i -e \
     "s/#applications\/mod_curl/applications\/mod_curl/g" \

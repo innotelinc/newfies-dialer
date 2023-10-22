@@ -135,7 +135,7 @@ func_install_fs_sources() {
     # mkswap /root/fakeswap
     # swapon /root/fakeswap
 
-    ./configure --without-pgsql --prefix=/usr/local/freeswitch --sysconfdir=/etc/freeswitch --enable-system-lua --disable-libvpx
+    ./configure --without-pgsql --sysconfdir=/etc --prefix=/usr/local --enable-system-lua  --disable-libvpx
     [ -f modules.conf ] && cp modules.conf modules.conf.bak
     sed -i -e \
     "s/#applications\/mod_curl/applications\/mod_curl/g" \
@@ -156,7 +156,7 @@ func_install_fs_sources() {
     -e "s/#say\/mod_say_th/say\/mod_say_th/g" \
     -e "s/#xml_int\/mod_xml_cdr/xml_int\/mod_xml_cdr/g" \
     modules.conf
-    autpupdate
+    autoupdate
     make && make install && make sounds-install && make moh-install
 
     # Remove temporary swap

@@ -5,8 +5,8 @@
     Specify local directories that will be searched for LUA modules
     These entries will be pre-pended to the LUA_CPATH environment variable
     -->
-    <!-- <param name="module-directory" value="/usr/lib/lua/5.1/?.so"/> -->
-    <!-- <param name="module-directory" value="/usr/local/lib/lua/5.1/?.so"/> -->
+    <!-- <param name="module-directory" value="/usr/lib/lua/5.2/?.so"/> -->
+    <!-- <param name="module-directory" value="/usr/local/lib/lua/5.2/?.so"/> -->
     <param name="module-directory" value="/usr/lib/x86_64-linux-gnu/?.so"/>
     <param name="module-directory" value="/usr/lib/x86_64-linux-gnu/lua/5.2/?.so"/>
     <param name="module-directory" value="/usr/lib/x86_64-linux-gnu/lua/5.2/luasql/?.so"/>

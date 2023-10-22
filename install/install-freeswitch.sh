@@ -23,8 +23,8 @@ if [ -z "${BRANCH}" ]; then
     BRANCH='master'
 fi
 
-FS_CONF_PATH=https://raw.github.com/newfies-dialer/newfies-dialer/$BRANCH/install/freeswitch-conf
-FS_INIT_PATH=https://raw.github.com/newfies-dialer/newfies-dialer/$BRANCH/install/freeswitch-init
+FS_CONF_PATH=https://raw.github.com/innotelinc/newfies-dialer/develop/install/freeswitch-conf
+FS_INIT_PATH=https://raw.github.com/innotelinc/newfies-dialer/develop/install/freeswitch-init
 FS_CONFIG_PATH=/etc/freeswitch
 FS_BASE_PATH=/usr/src
 CURRENT_PATH=$PWD

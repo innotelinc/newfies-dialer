@@ -25,7 +25,7 @@ fi
 
 FS_CONF_PATH=https://raw.github.com/innotelinc/newfies-dialer/develop/install/freeswitch-conf
 FS_INIT_PATH=https://raw.github.com/innotelinc/newfies-dialer/develop/install/freeswitch-init
-FS_CONFIG_PATH=/etc/freeswitch
+FS_CONFIG_PATH=/etc/freeswitch/freeswitch
 FS_BASE_PATH=/usr/src
 CURRENT_PATH=$PWD
 # KERNELARCH=$(uname -m)

@@ -2,7 +2,7 @@ docutils==0.18.1
 ordereddict==1.1
 anyjson==0.3.3
 pyparsing==2.0.3
-python-dateutil==2.4.1
+python-dateutil
 uuid==1.30
 #wsgiref==0.1.2
 redis==2.10.3

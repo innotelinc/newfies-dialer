@@ -156,6 +156,7 @@ func_install_fs_sources() {
     -e "s/#say\/mod_say_th/say\/mod_say_th/g" \
     -e "s/#xml_int\/mod_xml_cdr/xml_int\/mod_xml_cdr/g" \
     modules.conf
+    autpupdate
     make && make install && make sounds-install && make moh-install
 
     # Remove temporary swap

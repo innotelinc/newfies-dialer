@@ -406,10 +406,16 @@ func_setup_virtualenv() {
 
     # Setup virtualenv
     export WORKON_HOME=/usr/share/virtualenvs
-    virtualenv -p /usr/bin/python2.7 omni
+    source ~/.bashrc
+    workon
+    mkvirtualenv omni
+    workon omni
 
-    #Activate Virtual Enviornment
-    source omni/bin/activate
+#    export WORKON_HOME=/usr/share/virtualenvs
+#    virtualenv -p /usr/bin/python2.7 omni
+#
+#    #Activate Virtual Enviornment
+#    source omni/bin/activate
 
     echo "Virtualenv $NEWFIES_ENV created and activated"
 }

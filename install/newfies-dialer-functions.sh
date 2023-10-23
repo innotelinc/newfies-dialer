@@ -378,39 +378,39 @@ func_install_dependencies(){
 
 
 #Fuction to create the virtual env
-func_setup_virtualenv() {
-    echo "This will install virtualenv & virtualenvwrapper"
-    echo "and create a new virtualenv : $NEWFIES_ENV"
+#func_setup_virtualenv() {
+#    echo "This will install virtualenv & virtualenvwrapper"
+#    echo "and create a new virtualenv : $NEWFIES_ENV"
 
-    #Prepare settings for installation
-    case $DIST in
-        'DEBIAN')
-            SCRIPT_VIRTUALENVWRAPPER="/usr/local/bin/virtualenvwrapper.sh"
-        ;;
-        'CENTOS')
-            SCRIPT_VIRTUALENVWRAPPER="/usr/bin/virtualenvwrapper.sh"
-            #Upgrade Setuptools
-            pip install setuptools --no-use-wheel --upgrade
-        ;;
-    esac
+#    #Prepare settings for installation
+#    case $DIST in
+#        'DEBIAN')
+#            SCRIPT_VIRTUALENVWRAPPER="/usr/local/bin/virtualenvwrapper.sh"
+#        ;;
+#        'CENTOS')
+#            SCRIPT_VIRTUALENVWRAPPER="/usr/bin/virtualenvwrapper.sh"
+#            #Upgrade Setuptools
+#            pip install setuptools --no-use-wheel --upgrade
+#        ;;
+#    esac
 
-    pip install virtualenv
-    pip install virtualenvwrapper
+#    pip install virtualenv
+#    pip install virtualenvwrapper
 
-    # Enable virtualenvwrapper
-    chk=`grep "virtualenvwrapper" ~/.bashrc|wc -l`
-    if [ $chk -lt 1 ] ; then
-        echo "Set Virtualenvwrapper into bash"
-        echo "export WORKON_HOME=/usr/share/virtualenvs" >> ~/.bashrc
-        echo "source $SCRIPT_VIRTUALENVWRAPPER" >> ~/.bashrc
-    fi
+#    # Enable virtualenvwrapper
+#    chk=`grep "virtualenvwrapper" ~/.bashrc|wc -l`
+#    if [ $chk -lt 1 ] ; then
+#        echo "Set Virtualenvwrapper into bash"
+#        echo "export WORKON_HOME=/usr/share/virtualenvs" >> ~/.bashrc
+#        echo "source $SCRIPT_VIRTUALENVWRAPPER" >> ~/.bashrc
+#    fi
 
-    # Setup virtualenv
-    export WORKON_HOME=/usr/share/virtualenvs
-    source ~/.bashrc
-    workon
-    mkvirtualenv omni
-    workon omni
+#    # Setup virtualenv
+#    export WORKON_HOME=/usr/share/virtualenvs
+#    source ~/.bashrc
+#    workon
+#    mkvirtualenv omni
+#    workon omni
 
 #    export WORKON_HOME=/usr/share/virtualenvs
 #    virtualenv -p /usr/bin/python2.7 omni
@@ -418,8 +418,8 @@ func_setup_virtualenv() {
 #    #Activate Virtual Enviornment
 #    source omni/bin/activate
 
-    echo "Virtualenv $NEWFIES_ENV created and activated"
-}
+#    echo "Virtualenv $NEWFIES_ENV created and activated"
+#}
 
 
 #Function to backup the data from the previous installation

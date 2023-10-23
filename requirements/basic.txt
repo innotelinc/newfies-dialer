@@ -27,3 +27,4 @@ requests==2.7.0
 lockfile==0.10.2
 #git+https://github.com/innotelinc/librabbitmq.git
 librabbitmq==1.6.1
+imnportlib

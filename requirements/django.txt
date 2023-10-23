@@ -31,7 +31,8 @@ django-genericadmin==0.6.1
 django-bower==5.0.2
 django-cors-headers==1.0.0
 #git+http://github.com/hmarr/django-ses.git
-django-mailer
+git+http://github.com/pinax/django-mailer
+#django-mailer
 django-activelink==0.4
 git+http://github.com/areski/django-sms-gateway.git
 django-bootstrap-form==3.2

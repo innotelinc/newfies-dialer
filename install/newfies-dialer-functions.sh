@@ -202,10 +202,10 @@ func_install_dependencies(){
             pg_createcluster 9.3 main --start
             /etc/init.d/postgresql start
 
-            apt-get -y install python-software-properties
+            apt-get -y install software-properties-common
             apt-get -y install python-setuptools python2-dev build-essential
             apt-get -y install nginx supervisor
-            apt-get -y install git-core mercurial gawk cmake
+            apt-get -y install git mercurial gawk cmake
             apt-get -y install python-pip
             # for audiofile convertion
             apt-get -y install libsox-fmt-mp3 libsox-fmt-all mpg321

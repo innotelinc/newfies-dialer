@@ -300,14 +300,9 @@ func_install_dependencies(){
     rm -rf luarocks
     # wget --no-check-certificate http://luarocks.org/releases/luarocks-2.1.2.tar.gz
     #Use Github for sources
-    wget --no-check-certificate https://github.com/keplerproject/luarocks/archive/v2.1.2.tar.gz -O luarocks-2.1.2.tar.gz
-    tar zxf luarocks-*.tar.gz
-    rm -rf luarocks-*.tar.gz
-    mv luarocks-* luarocks
+    git clone https://github.com/luarocks/luarocks.git
     cd luarocks
-    ./configure
-    make
-    make bootstrap
+    ./configure && make && make bootstrap
 
     #Check if Luarocks
     LUAROCKS_UP=$(ping -c 2 luarocks.org 2>&1 | grep -c "100%")

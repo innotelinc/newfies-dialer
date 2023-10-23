@@ -203,7 +203,7 @@ func_install_dependencies(){
             /etc/init.d/postgresql start
 
             apt-get -y install python-software-properties
-            apt-get -y install python-setuptools python-dev build-essential
+            apt-get -y install python-setuptools python2-dev build-essential
             apt-get -y install nginx supervisor
             apt-get -y install git-core mercurial gawk cmake
             apt-get -y install python-pip

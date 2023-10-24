@@ -5,4 +5,4 @@ ipython
 pip-tools
 pygraphviz
 django-debug-toolbar-template-timings
-fake-factory
+#fake-factory

@@ -300,9 +300,9 @@ func_install_dependencies(){
     cd /usr/src
     rm -rf luarocks
     wget https://luarocks.github.io/luarocks/releases/luarocks-3.9.2.tar.gz
-    wget http://www.lua.org/ftp/lua-5.3.5.tar.gz
-    tar zxf lua-5.3.5.tar.gz
-    cd lua-5.3.5
+    wget http://www.lua.org/ftp/lua-5.4.6.tar.gz
+    tar zxf lua-5.4.6.tar.gz
+    cd lua-5.4.6
     make linux
     make install
     cd ..
@@ -366,7 +366,7 @@ func_install_dependencies(){
     cmake -DUSE_LUA52=ON .
     make install
     #add cURL.so to lua libs
-    cp cURL.so /usr/local/lib/lua/5.3/
+    cp cURL.so /usr/local/lib/lua/5.4/
 
     echo ""
     echo "easy_install -U setuptools pip distribute"

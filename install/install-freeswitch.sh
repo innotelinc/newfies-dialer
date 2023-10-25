@@ -80,7 +80,7 @@ func_install_deps() {
 
             if [ $DEBIANCODE != "jessie" ]; then
                 #DEBIAN7
-                apt-get -y install libgnutls-dev libtiff-dev libtiff
+                apt-get -y install libgnutls28-dev libtiff5-dev
             else
                 #DEBIAN8
                 apt-get -y install libgnutls28-dev libtiff5-dev libtiff5
@@ -135,7 +135,7 @@ func_install_fs_sources() {
     # mkswap /root/fakeswap
     # swapon /root/fakeswap
 
-    ./configure --prefix=/usr/local --sysconfdir=/etc --with-python=/usr/bin/python --without-pgsql --enable-python --enable-system-lua  --disable-libvpx
+    ./configure --prefix=/usr/local --sysconfdir=/etc --with-python=/usr/bin/python --without-pgsql --enable-python --enable-system-lua#  --disable-libvpx
     [ -f modules.conf ] && cp modules.conf modules.conf.bak
     sed -i -e \
     "s/#applications\/mod_curl/applications\/mod_curl/g" \

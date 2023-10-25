@@ -126,8 +126,7 @@ func_install_fs_sources() {
     echo ""
     echo "Running ./bootstrap.sh -j"
     echo ""
-    ./bootstrap.sh -j
-    autoupdate
+    autoupdate && ./bootstrap.sh -j
     # !!! virtual memory exhausted: Cannot allocate memory !!!
     # we need to make more temporary swap space
     #
@@ -188,9 +187,9 @@ func_install_luasql() {
 
     #Install LuaSQL
     cd /usr/src/
-    wget --no-check-certificate https://github.com/lunarmodules/luasql/archive/refs/tags/2.6.0.zip
-    unzip 2.6.0.zip
-    cd luasql-2.6.0/
+    wget --no-check-certificate https://github.com/keplerproject/luasql/archive/v2.3.0.zip
+    unzip v2.3.0.zip
+    cd luasql-2.3.0/
 
     #Copy a config file adapted for 64bit
     cp config config.orig

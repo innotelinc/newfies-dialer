@@ -184,14 +184,13 @@ install_fs_deb_packages() {
 
 func_install_luasql() {
     #Install Dependencies
-    apt-get install -y lua5.2 liblua5.2-dev
     apt-get install -y libpq-dev
 
     #Install LuaSQL
     cd /usr/src/
-    wget --no-check-certificate https://github.com/keplerproject/luasql/archive/v2.3.0.zip
-    unzip v2.3.0.zip
-    cd luasql-2.3.0/
+    wget --no-check-certificate https://github.com/keplerproject/luasql/archive/v2.6.0.zip
+    unzip v2.6.0.zip
+    cd luasql-2.6.0/
 
     #Copy a config file adapted for 64bit
     cp config config.orig

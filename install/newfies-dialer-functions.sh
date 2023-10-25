@@ -227,11 +227,7 @@ func_install_dependencies(){
             # node -v
 
             #Lua Deps
-            apt-get -y install lua5.2 liblua5.2-dev
-
-            #needed by lua-curl
             apt-get -y install libcurl4-openssl-dev
-            #Memcached
             apt-get -y install memcached
         ;;
         'CENTOS')

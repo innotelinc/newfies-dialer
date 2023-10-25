@@ -127,7 +127,7 @@ func_install_fs_sources() {
     echo "Running ./bootstrap.sh -j"
     echo ""
     ./bootstrap.sh -j
-
+    autoupdate
     # !!! virtual memory exhausted: Cannot allocate memory !!!
     # we need to make more temporary swap space
     #
@@ -156,7 +156,6 @@ func_install_fs_sources() {
     -e "s/#say\/mod_say_th/say\/mod_say_th/g" \
     -e "s/#xml_int\/mod_xml_cdr/xml_int\/mod_xml_cdr/g" \
     modules.conf
-    autoupdate
     make && make install && make sounds-install && make moh-install
 
     # Remove temporary swap

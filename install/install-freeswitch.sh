@@ -134,7 +134,7 @@ func_install_fs_sources() {
     # mkswap /root/fakeswap
     # swapon /root/fakeswap
 
-    ./configure --prefix=/usr/local --sysconfdir=/etc --with-python=/usr/bin/python --without-pgsql --enable-python --enable-system-lua
+    ./configure --without-pgsql
     [ -f modules.conf ] && cp modules.conf modules.conf.bak
     sed -i -e \
     "s/#applications\/mod_curl/applications\/mod_curl/g" \
@@ -162,6 +162,7 @@ func_install_fs_sources() {
     # rm /root/fakeswap
 
     #Set permissions
+    ln -s /usr/local/freeswitch/conf /etc/freeswitch
     chown -R freeswitch:freeswitch /usr/local/freeswitch /etc/freeswitch
 }
 

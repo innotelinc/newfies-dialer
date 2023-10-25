@@ -189,7 +189,7 @@ func_install_luasql() {
     #Install LuaSQL
     cd /usr/src/
     wget --no-check-certificate https://github.com/lunarmodules/luasql/archive/refs/tags/2.6.0.zip
-    unzip v2.6.0.zip
+    unzip 2.6.0.zip
     cd luasql-2.6.0/
 
     #Copy a config file adapted for 64bit

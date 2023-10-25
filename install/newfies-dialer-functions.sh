@@ -284,7 +284,7 @@ func_install_dependencies(){
             # Install Lua & luarocks
             cd /usr/src
             yum -y install readline-devel
-            LUAVERSION=lua-5.2.3
+            LUAVERSION=lua-5.3.5
             rm -rf lua
             wget --no-check-certificate http://www.lua.org/ftp/$LUAVERSION.tar.gz
             tar zxf $LUAVERSION.tar.gz
@@ -296,14 +296,19 @@ func_install_dependencies(){
         ;;
     esac
 
-    #Install Luarocks from sources
+    #Install Luarocks
     cd /usr/src
     rm -rf luarocks
-    # wget --no-check-certificate http://luarocks.org/releases/luarocks-2.1.2.tar.gz
-    #Use Github for sources
-    git clone https://github.com/luarocks/luarocks.git
-    cd luarocks
-    ./configure && make && make bootstrap
+    wget https://luarocks.github.io/luarocks/releases/luarocks-3.9.2.tar.gz
+    wget http://www.lua.org/ftp/lua-5.3.5.tar.gz
+    tar zxf lua-5.3.5.tar.gz
+    cd lua-5.3.5
+    make linux
+    make install
+    cd ..
+    tar zxf luarocks-3.9.2.tar.gz
+    cd luarocks-3.9.2
+    ./configure --with-lua-include=/usr/local/include && make && make install
 
     #Check if Luarocks
     LUAROCKS_UP=$(ping -c 2 luarocks.org 2>&1 | grep -c "100%")
@@ -322,7 +327,7 @@ func_install_dependencies(){
     #Prepare settings for installation
     case $DIST in
         'DEBIAN')
-            luarocks-5.2 install luasql-postgres PGSQL_INCDIR=/usr/include/postgresql/
+            luarocks install luasql-postgres PGSQL_INCDIR=/usr/include/postgresql/
         ;;
         'CENTOS')
             luarocks-5.2 install luasql-postgres PGSQL_DIR=/usr/pgsql-9.1/
@@ -330,27 +335,27 @@ func_install_dependencies(){
     esac
 
     #Install Lua dependencies
-    luarocks-5.2 install luasec  # install luasec to install inspect via https
-    luarocks-5.2 install luasocket
-    luarocks-5.2 install lualogging
-    luarocks-5.2 install loop
-    luarocks-5.2 install md5 1.2-1
-    luarocks-5.2 install luafilesystem
-    luarocks-5.2 install luajson 1.3.2-1
-    luarocks-5.2 install inspect
-    luarocks-5.2 install redis-lua
+    luarocks install luasec  # install luasec to install inspect via https
+    luarocks install luasocket
+    luarocks install lualogging
+    luarocks install loop
+    luarocks install md5 1.2-1
+    luarocks install luafilesystem
+    luarocks install luajson 1.3.2-1
+    luarocks install inspect
+    luarocks install redis-lua
     #Issue with last version of lpeg - lua libs/tag_replace.lua will seg fault
     #Pin the version 0.10.2-1
-    luarocks-5.2 remove lpeg --force
-    luarocks-5.2 install http://rocks.moonscript.org/manifests/luarocks/lpeg-0.12-1.rockspec
+    luarocks remove lpeg --force
+    luarocks install http://rocks.moonscript.org/manifests/luarocks/lpeg-0.12-1.rockspec
 
-    #luarocks-5.2 install lua-cmsgpack
+    #luarocks install lua-cmsgpack
     cd /usr/src/
     rm -rf lua-cmsgpack-master master.zip
     wget --no-check-certificate https://github.com/antirez/lua-cmsgpack/archive/master.zip
     unzip master.zip
     cd lua-cmsgpack-master
-    luarocks-5.2 make rockspec/lua-cmsgpack-scm-1.rockspec
+    luarocks make rockspec/lua-cmsgpack-scm-1.rockspec
 
     #Lua curl
     cd /usr/src/
@@ -361,7 +366,7 @@ func_install_dependencies(){
     cmake -DUSE_LUA52=ON .
     make install
     #add cURL.so to lua libs
-    cp cURL.so /usr/local/lib/lua/5.2/
+    cp cURL.so /usr/local/lib/lua/5.3/
 
     echo ""
     echo "easy_install -U setuptools pip distribute"

@@ -284,7 +284,7 @@ func_install_dependencies(){
             # Install Lua & luarocks
             cd /usr/src
             yum -y install readline-devel
-            LUAVERSION=lua-5.3.5
+            LUAVERSION=lua-5.4.6
             rm -rf lua
             wget --no-check-certificate http://www.lua.org/ftp/$LUAVERSION.tar.gz
             tar zxf $LUAVERSION.tar.gz

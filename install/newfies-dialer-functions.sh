@@ -374,7 +374,7 @@ func_install_dependencies(){
     #Create Newfies User
     echo ""
     echo "Create Newfies-Dialer User/Group : $NEWFIES_USER"
-    useradd $NEWFIES_USER --user-group --system --no-create-home
+    useradd $NEWFIES_USER -U -r -M
 }
 
 

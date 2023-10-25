@@ -76,11 +76,11 @@ func_install_deps() {
             apt-get -y install unzip zip sox sqlite3 ncftp nmap
             apt-get -y install autoconf2.64 automake autotools-dev binutils bison build-essential cpp curl flex gcc libaudiofile-dev libc6-dev libexpat1 libexpat1-dev mcrypt libmcrypt-dev libnewt-dev libpopt-dev libsctp-dev libx11-dev libxml2 libxml2-dev lksctp-tools lynx m4 openssl ssl-cert zlib1g-dev
 
-            apt-get -y install autoconf automake devscripts gawk g++ git-core 'libjpeg-dev|libjpeg62-turbo-dev' libncurses5-dev 'libtool-bin|libtool' make python-dev gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
+            apt-get -y install autoconf automake devscripts gawk g++ git libjpeg-dev ibjpeg62-turbo-dev libncurses5-dev libtool-bin libtool make python-dev-is-python3 gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
 
             if [ $DEBIANCODE != "jessie" ]; then
                 #DEBIAN7
-                apt-get -y install libgnutls-dev libtiff4-dev libtiff4
+                apt-get -y install libgnutls-dev libtiff-dev libtiff
             else
                 #DEBIAN8
                 apt-get -y install libgnutls28-dev libtiff5-dev libtiff5
@@ -135,7 +135,7 @@ func_install_fs_sources() {
     # mkswap /root/fakeswap
     # swapon /root/fakeswap
 
-    ./configure --prefix=/usr/local --sysconfdir=/etc --with-python=/usr/bin/python2.7 --without-pgsql --enable-python --enable-system-lua  --disable-libvpx
+    ./configure --prefix=/usr/local --sysconfdir=/etc --with-python=/usr/bin/python --without-pgsql --enable-python --enable-system-lua  --disable-libvpx
     [ -f modules.conf ] && cp modules.conf modules.conf.bak
     sed -i -e \
     "s/#applications\/mod_curl/applications\/mod_curl/g" \

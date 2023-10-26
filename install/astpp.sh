@@ -16,7 +16,7 @@ ASTPPEXECDIR=/usr/local/astpp/
 ASTPPLOGDIR=/var/log/astpp/
 
 #Freeswich Configuration
-FS_DIR=/usr/share/freeswitch
+FS_DIR=/usr/local/freeswitch
 FS_SOUNDSDIR=${FS_DIR}/sounds/en/us/callie
 
 #HTML and Mysql Configuraition
@@ -61,35 +61,33 @@ cd /usr/src
 apt install gnupg -y
 sudo apt install dirmngr --install-recommends
 apt-get install software-properties-common -y
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 467B942D3A79BD29
-sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
 
-apt -y install mysql-apt-config
-apt update -y
-apt-get install unixodbc unixodbc-dev
-debconf-set-selections <<< "mysql-community-server mysql-community-server/root-pass password ${MYSQL_ROOT_PASSWORD}"
-debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password ${MYSQL_ROOT_PASSWORD}"
-debconf-set-selections <<< "mysql-community-server mysql-server/default-auth-override select Use Legacy Authentication Method (Retain MySQL 5.x Compatibility)"
-DEBIAN_FRONTEND=noninteractive apt install mysql-server
+apt install -y mariadb-client libmariadb3 mariadb-server
+
+cd /usr/src
+wget https://dlm.mariadb.com/3286241/Connectors/odbc/connector-odbc-3.1.19/mariadb-connector-odbc-3.1.19-ubuntu-focal-amd64.tar.gz
+tar zxf mariadb-connector-odbc-3.1.19-ubuntu-focal-amd64.tar.gz
+cd mariadb-connector-odbc-3.1.19-ubuntu-focal-amd64
+install lib/mariadb/libmaodbc.so /usr/lib64/
+install -d /usr/lib64/mariadb/
+install -d /usr/lib64/mariadb/plugin/
+install lib/mariadb/plugin/caching_sha2_password.so /usr/lib64/mariadb/plugin/
+install lib/mariadb/plugin/client_ed25519.so /usr/lib64/mariadb/plugin/
+install lib/mariadb/plugin/dialog.so /usr/lib64/mariadb/plugin/
+install lib/mariadb/plugin/mysql_clear_password.so /usr/lib64/mariadb/plugin/
+install lib/mariadb/plugin/sha256_password.so /usr/lib64/mariadb/plugin/
+systemctl restart mariadb
+
+apt -y install default-libmysqlclient-dev unixodbc unixodbc-dev
 
 cd /opt/astpp/misc/
 tar -xzvf odbc.tar.gz
 mkdir -p /usr/lib/x86_64-linux-gnu/odbc/.
 cp -rf odbc/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/.
 
-###CHECK
-#cd /usr/src
-#tar zxf mariadb-connector-odbc-3.1.19-ubuntu-focal-amd64.tar.gz
-#cd mariadb-connector-odbc-3.1.19-ubuntu-focal-amd64
-#install lib/mariadb/libmaodbc.so /usr/lib64/
-#install -d /usr/lib64/mariadb/
-#install -d /usr/lib64/mariadb/plugin/
-###CHECK
-
 #Normalize mysql installation
 
 cp ${ASTPP_SOURCE_DIR}/misc/odbc/deb_odbc.ini /etc/odbc.ini
-                             
 sed -i '28i wait_timeout=600' /etc/mysql/conf.d/mysql.cnf
 sed -i '28i interactive_timeout = 600' /etc/mysql/conf.d/mysql.cnf
 sed -i '28i sql_mode=""' /etc/mysql/conf.d/mysql.cnf
@@ -98,9 +96,8 @@ sed -i '28i [mysqld]' /etc/mysql/conf.d/mysql.cnf
 systemctl restart mysql
 systemctl enable mysql
 
-
 #Install ASTPP with dependencies
- 
+
 apt update
 apt install -y nginx ntpdate ntp lua5.1 bc libxml2 libxml2-dev openssl libcurl4-openssl-dev gettext gcc g++
 mkdir -p ${ASTPPDIR}
@@ -118,9 +115,6 @@ sudo apt-get install -y locales-all
 mkdir -p /etc/nginx/ssl
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
 sudo apt-get install -y locales-all
-#/bin/cp /usr/src/ioncube/ioncube_loader_lin_7.3.so /usr/lib/php/20180731/
-#sed -i '2i zend_extension ="/usr/lib/php/20180731/ioncube_loader_lin_7.3.so"' /etc/php/7.3/fpm/php.ini
-#sed -i '2i zend_extension ="/usr/lib/php/20180731/ioncube_loader_lin_7.3.so"' /etc/php/7.3/cli/php.ini
 cp -rf ${ASTPP_SOURCE_DIR}/web_interface/nginx/deb_astpp.conf /etc/nginx/conf.d/astpp.conf
 systemctl start nginx
 systemctl enable nginx
@@ -140,11 +134,11 @@ sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /etc/php/7.4/fpm/
 sed -i "s/post_max_size = 8M/post_max_size = 20M/" /etc/php/7.4/fpm/php.ini
 sed -i "s/memory_limit = 128M/memory_limit = 512M/" /etc/php/7.4/fpm/php.ini
 systemctl restart php7.4-fpm
-CRONPATH='/var/spool/cron/crontabs/astpp'
 
-echo "# To call all crons   
-* * * * * cd ${ASTPP_SOURCE_DIR}/web_interface/astpp/cron/ && php cron.php crons
-" > $CRONPATH
+CRONPATH='/var/spool/cron/crontabs/astpp'
+echo "# To call all crons
+* * * * * cd ${ASTPP_SOURCE_DIR}/web_interface/astpp/cron/ && php cron.php crons" > $CRONPATH
+
 chmod 600 $CRONPATH
 crontab $CRONPATH
 touch /var/log/astpp/astpp.log
@@ -163,11 +157,90 @@ systemctl restart nginx
 
 #Install freeswitch with dependencies
 
-echo "Installing FREESWITCH"
-sleep 6s
-apt-get update && apt-get install -y gnupg2 wget lsb-release
-sleep 2s
-                
+apt-get -y update
+apt-get -y install locales-all
+
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+locale-gen en_US.UTF-8
+locale-gen es_ES.UTF-8
+locale-gen fr_FR.UTF-8
+locale-gen pt_BR.UTF-8
+
+apt-get -y install unzip zip sox sqlite3 ncftp nmap gnupg2 wget lsb-release
+apt-get -y install autoconf2.64 automake autotools-dev binutils bison build-essential cpp curl flex gcc libaudiofile-dev libc6-dev libexpat1 libexpat1-dev mcrypt libmcrypt-dev libnewt-dev libpopt-dev libsctp-dev libx11-dev libxml2 libxml2-dev lksctp-tools lynx m4 openssl ssl-cert zlib1g-dev
+apt-get -y install autoconf automake devscripts gawk g++ git libjpeg-dev ibjpeg62-turbo-dev libncurses5-dev libtool-bin libtool make python-dev-is-python3 gawk pkg-config libtiff5-dev libperl-dev libgdbm-dev libdb-dev gettext libssl-dev libcurl4-openssl-dev libpcre3-dev libspeex-dev libspeexdsp-dev libsqlite3-dev libedit-dev libldns-dev libpq-dev libmp3lame-dev
+apt-get -y install libgnutls28-dev libtiff5-dev libtiff5
+apt-get -y install libvorbis0a libogg0 libogg-dev libvorbis-dev
+apt-get -y install flite flite1-dev
+apt-get -y install unixodbc-dev odbc-postgresql
+apt -y autoremove
+
+/usr/sbin/groupadd -r -f freeswitch
+/usr/sbin/useradd -r -c "freeswitch" -g freeswitch freeswitch
+
+cd /usr/src
+git clone https://github.com/innotelinc/spandsp.git
+cd spandsp
+./bootstrap.sh && ./configure && make && make install
+ldconfig
+cd ..
+git clone https://github.com/innotelinc/sofia-sip.git
+cd sofia-sip
+./bootstrap.sh && ./configure && make && make install
+ldconfig
+cd ..
+git clone https://github.com/innotelinc/libks.git
+cd libks
+cmake . && make && make install
+cd ..
+git clone https://github.com/innotelinc/signalwire-c.git
+cd signalwire-c
+cmake . && make && make install
+cd ..
+git clone https://github.com/xiph/speex.git
+cd speex
+./autogen.sh && ./configure && make && make install
+cd ..
+git clone https://github.com/xiph/speexdsp.git
+cd speexdsp
+./autogen.sh && ./configure && make && make install
+
+cd /usr/src
+git clone https://github.com/innotelinc/freeswitch.git
+cd freeswitch
+./bootstrap.sh -j
+autoupdate
+./configure
+
+[ -f modules.conf ] && cp modules.conf modules.conf.bak
+sed -i -e \
+"s/#applications\/mod_curl/applications\/mod_curl/g" \
+-e "s/#applications\/mod_avmd/applications\/mod_avmd/g" \
+-e "s/#asr_tts\/mod_flite/asr_tts\/mod_flite/g" \
+-e "s/#asr_tts\/mod_tts_commandline/asr_tts\/mod_tts_commandline/g" \
+-e "s/#formats\/mod_shout/formats\/mod_shout/g" \
+-e "s/#endpoints\/mod_dingaling/endpoints\/mod_dingaling/g" \
+-e "s/#formats\/mod_shell_stream/formats\/mod_shell_stream/g" \
+-e "s/#say\/mod_say_de/say\/mod_say_de/g" \
+-e "s/#say\/mod_say_es/say\/mod_say_es/g" \
+-e "s/#say\/mod_say_fr/say\/mod_say_fr/g" \
+-e "s/#say\/mod_say_it/say\/mod_say_it/g" \
+-e "s/#say\/mod_say_nl/say\/mod_say_nl/g" \
+-e "s/#say\/mod_say_ru/say\/mod_say_ru/g" \
+-e "s/#say\/mod_say_zh/say\/mod_say_zh/g" \
+-e "s/#say\/mod_say_hu/say\/mod_say_hu/g" \
+-e "s/#say\/mod_say_th/say\/mod_say_th/g" \
+-e "s/#xml_int\/mod_xml_cdr/xml_int\/mod_xml_cdr/g" \
+-e "s/#xml_int\/mod_xml_curl/xml_int\/mod_xml_curl/g" \
+-e "s/#event_handlers\/mod_json_cdr/event_handlers\/mod_json_cdr/g" \
+modules.conf
+
+make && make install && make sounds-install && make moh-install && make cd-moh-install && make cd-sounds-install
+ln -s /usr/local/freeswitch/conf /etc/freeswitch
+chown -R freeswitch:freeswitch /usr/local/freeswitch /etc/freeswitch
+
 mv -f ${FS_DIR}/scripts /tmp/.
 ln -s ${ASTPP_SOURCE_DIR}/freeswitch/fs ${WWWDIR}
 ln -s ${ASTPP_SOURCE_DIR}/freeswitch/scripts ${FS_DIR}
@@ -176,8 +249,201 @@ cp -rf ${ASTPP_SOURCE_DIR}/freeswitch/conf/autoload_configs/* /etc/freeswitch/au
 
 #Normalize freeswitch installation
 
-systemctl start freeswitch
+adduser --disabled-password  --quiet --system --home /usr/local/freeswitch --gecos "FreeSWITCH Voice Platform" --ingroup daemon freeswitch
+chown -R freeswitch:daemon /usr/local/freeswitch/ 
+chmod -R o-rwx /usr/local/freeswitch/
+
+nano /etc/init.d/freeswitch
+
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          freeswitch
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Description:       Freeswitch debian init script.
+# Author:            Matthew Williams
+#
+### END INIT INFO
+# Do NOT "set -e"
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+DESC="Freeswitch"
+NAME=freeswitch
+DAEMON=/usr/local/freeswitch/bin/$NAME
+DAEMON_ARGS="-nc"
+PIDFILE=/usr/local/freeswitch/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+FS_USER=freeswitch
+FS_GROUP=daemon
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+# Read configuration variable file if it is present
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+. /lib/lsb/init-functions
+
+#
+# Function that sets ulimit values for the daemon
+#
+do_setlimits() {
+        ulimit -c unlimited
+        ulimit -d unlimited
+        ulimit -f unlimited
+        ulimit -i unlimited
+        ulimit -n 999999
+        ulimit -q unlimited
+        ulimit -u unlimited
+        ulimit -v unlimited
+        ulimit -x unlimited
+        ulimit -s 240
+        ulimit -l unlimited
+        return 0
+}
+
+#
+# Function that starts the daemon/service
+#
+do_start()
+{
+    # Set user to run as
+        if [ $FS_USER ] ; then
+      DAEMON_ARGS="`echo $DAEMON_ARGS` -u $FS_USER"
+        fi
+    # Set group to run as
+        if [ $FS_GROUP ] ; then
+          DAEMON_ARGS="`echo $DAEMON_ARGS` -g $FS_GROUP"
+        fi
+
+        # Return
+        #   0 if daemon has been started
+        #   1 if daemon was already running
+        #   2 if daemon could not be started
+        start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null -- \
+                || return 1
+        do_setlimits
+        start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --background -- \
+                $DAEMON_ARGS \
+                || return 2
+        # Add code here, if necessary, that waits for the process to be ready
+        # to handle requests from services started subsequently which depend
+        # on this one.  As a last resort, sleep for some time.
+}
+
+#
+# Function that stops the daemon/service
+#
+do_stop()
+{
+        # Return
+        #   0 if daemon has been stopped
+        #   1 if daemon was already stopped
+        #   2 if daemon could not be stopped
+        #   other if a failure occurred
+        start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name $NAME
+        RETVAL="$?"
+        [ "$RETVAL" = 2 ] && return 2
+        # Wait for children to finish too if this is a daemon that forks
+        # and if the daemon is only ever run from this initscript.
+        # If the above conditions are not satisfied then add some other code
+        # that waits for the process to drop all resources that could be
+        # needed by services started subsequently.  A last resort is to
+        # sleep for some time.
+        start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
+        [ "$?" = 2 ] && return 2
+        # Many daemons don't delete their pidfiles when they exit.
+        rm -f $PIDFILE
+        return "$RETVAL"
+}
+
+#
+# Function that sends a SIGHUP to the daemon/service
+#
+do_reload() {
+        #
+        # If the daemon can reload its configuration without
+        # restarting (for example, when it is sent a SIGHUP),
+        # then implement that here.
+        #
+        start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name $NAME
+        return 0
+}
+
+case "$1" in
+  start)
+        [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+        do_start
+        case "$?" in
+                0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+                2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+        esac
+        ;;
+  stop)
+        [ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+        do_stop
+        case "$?" in
+                0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+                2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+        esac
+        ;;
+  status)
+       status_of_proc -p $PIDFILE $DAEMON $NAME && exit 0 || exit $?
+       ;;
+  #reload|force-reload)
+        #
+        # If do_reload() is not implemented then leave this commented out
+        # and leave 'force-reload' as an alias for 'restart'.
+        #
+        #log_daemon_msg "Reloading $DESC" "$NAME"
+        #do_reload
+        #log_end_msg $?
+        #;;
+  restart|force-reload)
+        #
+        # If the "reload" option is implemented then remove the
+        # 'force-reload' alias
+        #
+        log_daemon_msg "Restarting $DESC" "$NAME"
+        do_stop
+        case "$?" in
+          0|1)
+                do_start
+                case "$?" in
+                        0) log_end_msg 0 ;;
+                        1) log_end_msg 1 ;; # Old process is still running
+                        *) log_end_msg 1 ;; # Failed to start
+                esac
+                ;;
+          *)
+                # Failed to stop
+                log_end_msg 1
+                ;;
+        esac
+        ;;
+  *)
+        #echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
+        echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+        exit 3
+        ;;
+esac
+
+exit 0
+
+chmod +x /etc/init.d/freeswitch
+update-rc.d freeswitch defaults
 systemctl enable freeswitch
+systemctl start freeswitch
+
 sed -i "s#max-sessions\" value=\"1000#max-sessions\" value=\"2000#g" /etc/freeswitch/autoload_configs/switch.conf.xml
 sed -i "s#sessions-per-second\" value=\"30#sessions-per-second\" value=\"50#g" /etc/freeswitch/autoload_configs/switch.conf.xml
 sed -i "s#max-db-handles\" value=\"50#max-db-handles\" value=\"500#g" /etc/freeswitch/autoload_configs/switch.conf.xml
@@ -196,14 +462,14 @@ chmod -Rf 777 /var/lib/freeswitch/recordings/*
 cp -rf ${ASTPP_SOURCE_DIR}/web_interface/nginx/deb_fs.conf /etc/nginx/conf.d/fs.conf
 chown -Rf root.root ${WWWDIR}/fs
 chmod -Rf 755 ${WWWDIR}/fs
-/bin/systemctl restart freeswitch
-/bin/systemctl enable freeswitch
+
+systemctl restart freeswitch
 
 #Install Database for ASTPP
 mysqladmin -u root -p${MYSQL_ROOT_PASSWORD} create ${ASTPP_DATABASE_NAME}
 mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "CREATE USER 'astppuser'@'localhost' IDENTIFIED BY '${ASTPPUSER_MYSQL_PASSWORD}';"
-mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "ALTER USER 'astppuser'@'localhost' IDENTIFIED WITH mysql_native_password BY '${ASTPPUSER_MYSQL_PASSWORD}';"
-mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON \`${ASTPP_DATABASE_NAME}\` . * TO 'astppuser'@'localhost' WITH GRANT OPTION;FLUSH PRIVILEGES;"
+mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "ALTER USER 'astppuser'@'localhost' IDENTIFIED BY '${ASTPPUSER_MYSQL_PASSWORD}';"
+mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON \`${ASTPP_DATABASE_NAME}\` . * TO 'astppuser'@'localhost' IDENTIFIED BY 'DD@l1lama';"
 mysql -uroot -p${MYSQL_ROOT_PASSWORD} astpp < ${ASTPP_SOURCE_DIR}/database/astpp-6.0.sql
 mysql -uroot -p${MYSQL_ROOT_PASSWORD} astpp < ${ASTPP_SOURCE_DIR}/database/astpp-6.0.1.sql
 
@@ -224,34 +490,32 @@ firewall-cmd --reload
 #Install Fail2ban for security
 
 apt-get update -y
-sleep 2s
 apt-get install fail2ban -y
-sleep 2s
+
 echo ""
 read -p "Enter Client's Notification email address: ${NOTIEMAIL}"
 NOTIEMAIL=${REPLY}
 echo ""
 read -p "Enter sender email address: ${NOTISENDEREMAIL}"
 NOTISENDEREMAIL=${REPLY}
-cd /usr/src
-#wget --no-check-certificate --max-redirect=0 https://latest.astppbilling.org/fail2ban_Deb.tar.gz
-#tar xzvf fail2ban_Deb.tar.gz
+cd /opt/astpp/misc/
+tar -xzvf deb_files.tar.gz
 mv /etc/fail2ban /tmp/
-cd ${ASTPP_SOURCE_DIR}/misc/
-tar -xzvf fail2ban_deb10.tar.gz
-cp -rf ${ASTPP_SOURCE_DIR}/misc/fail2ban_deb10 /etc/fail2ban
-#cp -rf /usr/src/fail2ban /etc/fail2ban
-#cp -rf ${ASTPP_SOURCE_DIR}/misc/deb_files/fail2ban/jail.local /etc/fail2ban/jail.local
+cp -rf /opt/astpp/misc/deb_files/fail2ban /etc/fail2ban
 
 sed -i -e "s/{INTF}/${INTF}/g" /etc/fail2ban/jail.local
 sed -i -e "s/{NOTISENDEREMAIL}/${NOTISENDEREMAIL}/g" /etc/fail2ban/jail.local
 sed -i -e "s/{NOTIEMAIL}/${NOTIEMAIL}/g" /etc/fail2ban/jail.local
 
-mkdir /var/run/fail2ban
-chkconfig fail2ban on
-systemctl restart fail2ban
-systemctl enable fail2ban
+mkdir -p /var/run/fail2ban
+ln -s /usr/local/freeswitch/log/ /var/log/freeswitch
 
+nano /etc/fail2ban/jail.conf
+[Freeswitch]
+logpath  = /var/log/freeswitch/freeswitch.log
+
+systemctl enable fail2ban
+systemctl restart fail2ban
 
 #Install Monit for service monitoring
 

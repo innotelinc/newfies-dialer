@@ -1,29 +1,4 @@
 #!/bin/bash
-###############################################################################
-# ASTPP - Open Source VoIP Billing Solution
-#
-# Copyright (C) 2019 iNextrix Technologies Pvt. Ltd.
-# ASTPP Version 3.5
-# License https://www.gnu.org/licenses/agpl-3.0.html
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-# 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-# 
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-###############################################################################
-
-
-#################################
-##########  variables ###########
-#################################
 
 #General Congifuration
 TEMP_USER_ANSWER="no"
@@ -78,7 +53,7 @@ get_linux_distribution ()
         V1=`cat /etc/*release | head -n1 | tail -n1 | cut -c 14- | cut -c1-18`
         V2=`cat /etc/*release | head -n7 | tail -n1 | cut -c 14- | cut -c1-14`
         V3=`cat /etc/*release | grep Deb | head -n1 | tail -n1 | cut -c 14- | cut -c1-19`
-        V4=`cat /etc/*release | grep Deb | head -n1 | tail -n1 | cut -c 14- | cut -c1-19`
+        V4=`cat /etc/*release | head -n1 | tail -n1 | cut -c 12-
         if [[ $V1 = "Debian GNU/Linux 9" ]]; then
                 DIST="DEBIAN"
                 echo -e "$Green ===Your OS is $V1===$Color_Off"
@@ -88,7 +63,7 @@ get_linux_distribution ()
         else if [[ $V3 = "Debian GNU/Linux 10" || $V4 = "Debian GNU/Linux 11" ]]; then
                 DIST="DEBIAN10"
                 echo -e "$Green ===Your OS is $V3===$Color_Off"
-        else if [[$V4 = "Debian GNU/Linux 11"]]; then
+        else if [[$V4 = "Ubuntu"]]; then
                 echo -e "$Green ===Your OS is $V4===$Color_Off"
         else
                 DIST="OTHER"

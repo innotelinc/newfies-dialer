@@ -522,12 +522,14 @@ systemctl restart fail2ban
 cd /usr/src/
 sudo apt-get update -y
 sudo apt-get install monit -y
-sed -i -e 's/# set mailserver mail.innotel.us,/set mailserver localhost/g' /etc/monit/monitrc
-sed -i -e '/# set mail-format { from: monit@foo.bar }/a set alert '$EMAIL /etc/monit/monitrc
+
+sed -i -e 's/# set mailserver mail.bar.baz,/set mailserver localhost/g' /etc/monit/monitrc
+sed -i -e '/# set mail-format { from: monit@innotel.us }/a set alert '$EMAIL /etc/monit/monitrc
 sed -i -e 's/##   subject: monit alert on --  $EVENT $SERVICE/   subject: monit alert --  $EVENT $SERVICE/g' /etc/monit/monitrc
 sed -i -e 's/##   subject: monit alert --  $EVENT $SERVICE/   subject: monit alert on '${INTF}' --  $EVENT $SERVICE/g' /etc/monit/monitrc
 sed -i -e 's/## set mail-format {/set mail-format {/g' /etc/monit/monitrc
 sed -i -e 's/## }/ }/g' /etc/monit/monitrc
+
 echo '
 #------------MySQL
 check process mysqld with pidfile /var/run/mysqld/mysqld.pid
@@ -568,9 +570,9 @@ check system localhost
 
 check filesystem "root" with path /
     if space usage > 80% for 1 cycles then alert' >> /etc/monitrc
-sleep 1s
-systemctl restart monit
+
 systemctl enable monit
+systemctl restart monit
 
 #Configure logrotation for maintain log size
 
@@ -584,8 +586,56 @@ sed -i -e 's/rotate 52/rotate 5/g' /etc/logrotate.d/nginx
 sed -i -e 's/weekly/size 30M/g' /etc/logrotate.d/fail2ban
 sed -i -e 's/weekly/size 30M/g' /etc/logrotate.d/monit
 
+#Install ASTPP
+
+mkdir -p ${ASTPPDIR}
+mkdir -p ${ASTPPLOGDIR}
+mkdir -p ${ASTPPEXECDIR}
+mkdir -p ${WWWDIR}
+cp -rf /opt/ASTPP/config/astpp-config.conf ${ASTPPDIR}astpp-config.conf
+cp -rf /opt/ASTPP/config/astpp.lua ${ASTPPDIR}astpp.lua
+ln -s /opt/ASTPP/web_interface/astpp ${WWWDIR}
+ln -s /opt/ASTPP//freeswitch/fs ${WWWDIR}
+
+mkdir -p /etc/nginx/ssl
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
+
+###MAY NOT BE NEEDED
+/bin/cp /usr/src/ioncube/ioncube_loader_lin_7.4.so /usr/lib/php/20190902/
+sed -i '2i zend_extension ="/usr/lib/php/20190902/ioncube_loader_lin_7.4.so"' /etc/php/7.4/fpm/php.ini
+sed -i '2i zend_extension ="/usr/lib/php/20190902/ioncube_loader_lin_7.4.so"' /etc/php/7.4/cli/php.ini
+cp -rf /opt/astpp/web_interface/nginx/deb_astpp.conf /etc/nginx/conf.d/astpp.conf
+systemctl start nginx
+systemctl enable nginx
+systemctl start php7.4-fpm
+systemctl enable php7.4-fpm
+chown -Rf root.root ${ASTPPDIR}
+chown -Rf www-data.www-data ${ASTPPLOGDIR}
+chown -Rf root.root ${ASTPPEXECDIR}
+chown -Rf www-data.www-data ${WWWDIR}/astpp
+chown -Rf www-data.www-data ${ASTPP_SOURCE_DIR}/web_interface/astpp
+chmod -Rf 755 ${WWWDIR}/astpp
+sed -i "s/;request_terminate_timeout = 0/request_terminate_timeout = 300/" /etc/php/7.4/fpm/pool.d/www.conf
+sed -i "s#short_open_tag = Off#short_open_tag = On#g" /etc/php/7.4/fpm/php.ini
+sed -i "s#;cgi.fix_pathinfo=1#cgi.fix_pathinfo=1#g" /etc/php/7.4/fpm/php.ini
+sed -i "s/max_execution_time = 30/max_execution_time = 3000/" /etc/php/7.4/fpm/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 20M/" /etc/php/7.4/fpm/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 20M/" /etc/php/7.4/fpm/php.ini
+sed -i "s/memory_limit = 128M/memory_limit = 512M/" /etc/php/7.4/fpm/php.ini
+systemctl restart php7.4-fpm
+####
+
+#Certbot
+apt -y install python3-certbot-nginx
+certbot --nginx -d astpp.innotel.us
+
+sed -i -e 's/server_name _;/server_name astpp.innotel.us;/g' /etc/nginx/conf.d/astpp.conf
+sed -i "s#base_url=https://localhost:443/#base_url=https://astpp.innotel.us/#g" /var/lib/astpp/astpp-config.conf
+
+systemctl reload nginx
+
 #Remove all downloaded and temp files from server
 
 cd /usr/src
-rm -rf fail2ban* GNU-AGPLv3.6.txt install.sh mysql80-community-release-el7-1.noarch.rpm
+rm -rf fail2ban* GNU-AGPLv3.6.txt astpp.sh ioncube_loaders* mariadb-connector-odbc-3.1.19-ubuntu-focal-amd64.tar.gz
 systemctl restart freeswitch

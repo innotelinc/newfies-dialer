@@ -1,9 +1,3 @@
-#!/bin/bash
-
-#################################
-##########  variables ###########
-#################################
-
 #General Congifuration
 TEMP_USER_ANSWER="yes"
 ASTPP_SOURCE_DIR=/opt/astpp

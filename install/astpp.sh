@@ -64,17 +64,15 @@ apt-get install software-properties-common -y
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 467B942D3A79BD29
 sudo apt-key adv --keyserver pgp.mit.edu --recv-keys 3A79BD29
 
-#wget https://repo.mysql.com/mysql-apt-config_0.8.13-1_all.deb
-#sudo dpkg -i mysql-apt-config_0.8.13-1_all.deb
-wget https://repo.mysql.com//mysql-apt-config_0.8.22-1_all.deb
-sudo dpkg --install mysql-apt-config_0.8.22-1_all.deb
+apt -y install mysql-apt-config
 apt update -y
 apt-get install unixodbc unixodbc-dev
 debconf-set-selections <<< "mysql-community-server mysql-community-server/root-pass password ${MYSQL_ROOT_PASSWORD}"
 debconf-set-selections <<< "mysql-community-server mysql-community-server/re-root-pass password ${MYSQL_ROOT_PASSWORD}"
 debconf-set-selections <<< "mysql-community-server mysql-server/default-auth-override select Use Legacy Authentication Method (Retain MySQL 5.x Compatibility)"
 DEBIAN_FRONTEND=noninteractive apt install mysql-server
-cd /opt/ASTPP/misc/
+
+cd /opt/astpp/misc/
 tar -xzvf odbc.tar.gz
 mkdir -p /usr/lib/x86_64-linux-gnu/odbc/.
 cp -rf odbc/libmyodbc8* /usr/lib/x86_64-linux-gnu/odbc/.
@@ -152,9 +150,9 @@ crontab $CRONPATH
 touch /var/log/astpp/astpp.log
 touch /var/log/astpp/astpp_email.log
 chmod -Rf 755 $ASTPP_SOURCE_DIR
-chmod -Rf 777 /opt/ASTPP/
-chmod -Rf 777 /opt/ASTPP/*
-chmod -Rf 777 /opt/ASTPP
+chmod -Rf 777 /opt/astpp/
+chmod -Rf 777 /opt/astpp/*
+chmod -Rf 777 /opt/astpp
 chmod 777 /var/log/astpp/astpp.log
 chmod 777 /var/log/astpp/astpp_email.log
 sed -i "s#dbpass = <PASSSWORD>#dbpass = ${ASTPPUSER_MYSQL_PASSWORD}#g" ${ASTPPDIR}astpp-config.conf
@@ -191,7 +189,7 @@ touch /etc/freeswitch/directory/astpp.xml
 rm -rf  /etc/freeswitch/sip_profiles/*
 touch /etc/freeswitch/sip_profiles/astpp.xml
 chmod -Rf 755 ${FS_SOUNDSDIR}
-chmod -Rf 777 /opt/ASTPP/
+chmod -Rf 777 /opt/astpp/
 chmod -Rf 777 /usr/share/freeswitch/scripts/astpp/lib
 chmod -Rf 777 /var/lib/freeswitch/recordings
 chmod -Rf 777 /var/lib/freeswitch/recordings/*

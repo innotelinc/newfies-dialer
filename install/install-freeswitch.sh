@@ -183,7 +183,7 @@ install_fs_deb_packages() {
 
 func_install_luasql() {
     #Install Dependencies
-    apt-get install -y lua5.4 liblua5.4-dev
+    apt-get install -y lua5.3 liblua5.3-dev libpq-dev
     apt-get install -y libpq-dev
 
     #Install LuaSQL

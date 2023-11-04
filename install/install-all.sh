@@ -1,28 +1,4 @@
 #!/bin/bash
-#
-# Newfies-Dialer License
-# http://www.newfies-dialer.org
-#
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this file,
-# You can obtain one at http://mozilla.org/MPL/2.0/.
-#
-# Copyright (C) 2011-2015 Star2Billing S.L.
-#
-# The primary maintainer of this project is
-# Arezqui Belaid <info@star2billing.com>
-#
-
-#
-# To download and run the script on your server :
-# cd /usr/src/ ; rm install-all.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/master/install/install-all.sh ; chmod +x install-all.sh ; ./install-all.sh
-#
-#
-# To install develop branch:
-#
-# export BRANCH=develop; export INSTALL_FS=yes
-# cd /usr/src/ ; rm install-all.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/develop/install/install-all.sh ; chmod +x install-all.sh ; ./install-all.sh
-#
 
 # Set branch to install develop / default: master
 if [ -z "${BRANCH}" ]; then
@@ -47,7 +23,7 @@ func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
         apt-get -y install lsb-release
-        if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "jessie" ] && [ "$(lsb_release -cs)" != "buster" ] && [ "$(lsb_release -cs)" != "bookworm" ] && [ "$(lsb_release -cs)" != "focal" ]  && [ "$(lsb_release -cs)" != "jammy" ] && [ "$(lsb_release -cs)" != "lunar" ]; then
+        if [ "$(lsb_release -cs)" != "wheezy" ] && [ "$(lsb_release -cs)" != "bullseye" ]; then
             echo $SCRIPT_NOTICE
             exit 255
         fi
@@ -124,9 +100,13 @@ esac
 
 if [ $INSTALL_FS = "yes" ]; then
     #Install Freeswitch
-    bash $PWD/install/install-freeswitch.sh
+    cd /usr/src/
+    wget --no-check-certificate  https://raw.githubusercontent.com/innotelinc/newfies-dialer/develop/install/install-freeswitch.sh -O install-freeswitch.sh
+    bash install-freeswitch.sh
     /etc/init.d/freeswitch start
 fi
 
 #Install Newfies
-bash $PWD/install/install-newfies.sh
+cd /usr/src/
+wget --no-check-certificate https://raw.githubusercontent.com/innotelinc/newfies-dialer/develop/install/install-newfies.sh -O install-newfies.sh
+bash install-newfies.sh

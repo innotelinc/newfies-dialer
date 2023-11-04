@@ -1,27 +1,4 @@
 #!/bin/bash
-#
-# Newfies-Dialer License
-# http://www.newfies-dialer.org
-#
-# This Source Code Form is subject to the terms of the Mozilla Public
-# License, v. 2.0. If a copy of the MPL was not distributed with this file,
-# You can obtain one at http://mozilla.org/MPL/2.0/.
-#
-# Copyright (C) 2011-2015 Star2Billing S.L.
-#
-# The primary maintainer of this project is
-# Arezqui Belaid <info@star2billing.com>
-#
-
-#
-# To download and run the script on your server :
-#
-# >> Install with Master script :
-# cd /usr/src/ ; rm install-newfies.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/master/install/install-newfies.sh ; chmod +x install-newfies.sh ; ./install-newfies.sh
-#
-# >> Install with develop script :
-# cd /usr/src/ ; rm install-newfies.sh ; wget --no-check-certificate https://raw.github.com/newfies-dialer/newfies-dialer/develop/install/install-newfies.sh ; chmod +x install-newfies.sh ; ./install-newfies.sh
-#
 
 # Set branch to install develop / default: master
 if [ -z "${BRANCH}" ]; then
@@ -55,7 +32,7 @@ SCRIPT_NOTICE="This install script is only intended to run on Debian 7.X or 8.X"
 func_identify_os() {
     if [ -f /etc/debian_version ] ; then
         DIST='DEBIAN'
-        if [ "$(lsb_release -cs)" != "bullseye" ] && [ "$(lsb_release -cs)" != "jessie" ] && [ "$(lsb_release -cs)" != "buster" ] && [ "$(lsb_release -cs)" != "bookworm" ] && [ "$(lsb_release -cs)" != "focal" ]  && [ "$(lsb_release -cs)" != "jammy" ] && [ "$(lsb_release -cs)" != "lunar" ]; then
+        if [ "$(lsb_release -cs)" != "wheezy" ] && [ "$(lsb_release -cs)" != "bullseye" ]; then
             echo $SCRIPT_NOTICE
             exit 255
         fi
@@ -114,11 +91,11 @@ func_install_landing_page() {
             cp /usr/src/newfies-dialer/install/nginx/sites-available/newfies_dialer.conf /etc/nginx/sites-available/
             ln -s /etc/nginx/sites-available/newfies_dialer.conf /etc/nginx/sites-enabled/newfies_dialer.conf
             #Remove default NGINX landing page
-            #rm /etc/nginx/sites-enabled/default
+            rm /etc/nginx/sites-enabled/default
         ;;
         'CENTOS')
             cp /usr/src/newfies-dialer/install/nginx/sites-available/newfies_dialer.conf /etc/nginx/conf.d/
-            #rm /etc/nginx/conf.d/default.conf
+            rm /etc/nginx/conf.d/default.conf
         ;;
     esac
 
@@ -179,7 +156,6 @@ func_install_dependencies(){
             #Used by PostgreSQL
             echo "deb http://apt.postgresql.org/pub/repos/apt/ $DEBIANCODE-pgdg main" > /etc/apt/sources.list.d/pgdg.list
             wget --no-check-certificate --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc|apt-key add -
-            apt -y autoremove
             apt-get update
 
             export LANGUAGE=en_US.UTF-8
@@ -202,10 +178,10 @@ func_install_dependencies(){
             pg_createcluster 9.3 main --start
             /etc/init.d/postgresql start
 
-            apt-get -y install software-properties-common
-            apt-get -y install python-setuptools python2-dev build-essential
+            apt-get -y install python-software-properties
+            apt-get -y install python-setuptools python-dev build-essential
             apt-get -y install nginx supervisor
-            apt-get -y install git mercurial gawk cmake
+            apt-get -y install git-core mercurial gawk cmake
             apt-get -y install python-pip
             # for audiofile convertion
             apt-get -y install libsox-fmt-mp3 libsox-fmt-all mpg321
@@ -213,8 +189,8 @@ func_install_dependencies(){
             apt-get -y install flite
 
             #Install Node.js & NPM
-            apt-get -y install nodejs
-            curl -sL https://deb.nodesource.com/setup_20.x | bash -
+            apt-get -y install nodejs-legacy
+            curl -sL https://deb.nodesource.com/setup | bash -
             apt-get install -y nodejs
 
             # cd /usr/src/ ; git clone https://github.com/joyent/node.git
@@ -227,7 +203,11 @@ func_install_dependencies(){
             # node -v
 
             #Lua Deps
+            apt-get -y install lua5.2 liblua5.2-dev
+
+            #needed by lua-curl
             apt-get -y install libcurl4-openssl-dev
+            #Memcached
             apt-get -y install memcached
         ;;
         'CENTOS')
@@ -280,7 +260,7 @@ func_install_dependencies(){
             # Install Lua & luarocks
             cd /usr/src
             yum -y install readline-devel
-            LUAVERSION=lua-5.4.6
+            LUAVERSION=lua-5.2.3
             rm -rf lua
             wget --no-check-certificate http://www.lua.org/ftp/$LUAVERSION.tar.gz
             tar zxf $LUAVERSION.tar.gz
@@ -292,19 +272,19 @@ func_install_dependencies(){
         ;;
     esac
 
-    #Install Luarocks
+    #Install Luarocks from sources
     cd /usr/src
     rm -rf luarocks
-    wget https://luarocks.github.io/luarocks/releases/luarocks-3.9.2.tar.gz
-    wget http://www.lua.org/ftp/lua-5.4.6.tar.gz
-    tar zxf lua-5.4.6.tar.gz
-    cd lua-5.4.6
-    make linux
-    make install
-    cd ..
-    tar zxf luarocks-3.9.2.tar.gz
-    cd luarocks-3.9.2
-    ./configure --with-lua-include=/usr/local/include && make && make install
+    # wget --no-check-certificate http://luarocks.org/releases/luarocks-2.1.2.tar.gz
+    #Use Github for sources
+    wget --no-check-certificate https://github.com/keplerproject/luarocks/archive/v2.1.2.tar.gz -O luarocks-2.1.2.tar.gz
+    tar zxf luarocks-*.tar.gz
+    rm -rf luarocks-*.tar.gz
+    mv luarocks-* luarocks
+    cd luarocks
+    ./configure
+    make
+    make bootstrap
 
     #Check if Luarocks
     LUAROCKS_UP=$(ping -c 2 luarocks.org 2>&1 | grep -c "100%")
@@ -323,7 +303,7 @@ func_install_dependencies(){
     #Prepare settings for installation
     case $DIST in
         'DEBIAN')
-            luarocks install luasql-postgres PGSQL_INCDIR=/usr/include/postgresql/
+            luarocks-5.2 install luasql-postgres PGSQL_INCDIR=/usr/include/postgresql/
         ;;
         'CENTOS')
             luarocks-5.2 install luasql-postgres PGSQL_DIR=/usr/pgsql-9.1/
@@ -331,27 +311,27 @@ func_install_dependencies(){
     esac
 
     #Install Lua dependencies
-    luarocks install luasec  # install luasec to install inspect via https
-    luarocks install luasocket
-    luarocks install lualogging
-    luarocks install loop
-    luarocks install md5 1.2-1
-    luarocks install luafilesystem
-    luarocks install luajson 1.3.2-1
-    luarocks install inspect
-    luarocks install redis-lua
+    luarocks-5.2 install luasec  # install luasec to install inspect via https
+    luarocks-5.2 install luasocket
+    luarocks-5.2 install lualogging
+    luarocks-5.2 install loop
+    luarocks-5.2 install md5 1.2-1
+    luarocks-5.2 install luafilesystem
+    luarocks-5.2 install luajson 1.3.2-1
+    luarocks-5.2 install inspect
+    luarocks-5.2 install redis-lua
     #Issue with last version of lpeg - lua libs/tag_replace.lua will seg fault
     #Pin the version 0.10.2-1
-    luarocks remove lpeg --force
-    luarocks install http://rocks.moonscript.org/manifests/luarocks/lpeg-0.12-1.rockspec
+    luarocks-5.2 remove lpeg --force
+    luarocks-5.2 install http://rocks.moonscript.org/manifests/luarocks/lpeg-0.12-1.rockspec
 
-    #luarocks install lua-cmsgpack
+    #luarocks-5.2 install lua-cmsgpack
     cd /usr/src/
     rm -rf lua-cmsgpack-master master.zip
     wget --no-check-certificate https://github.com/antirez/lua-cmsgpack/archive/master.zip
     unzip master.zip
     cd lua-cmsgpack-master
-    luarocks make rockspec/lua-cmsgpack-scm-1.rockspec
+    luarocks-5.2 make rockspec/lua-cmsgpack-scm-1.rockspec
 
     #Lua curl
     cd /usr/src/
@@ -362,7 +342,7 @@ func_install_dependencies(){
     cmake -DUSE_LUA52=ON .
     make install
     #add cURL.so to lua libs
-    cp cURL.so /usr/local/lib/lua/5.4/
+    cp cURL.so /usr/local/lib/lua/5.2/
 
     echo ""
     echo "easy_install -U setuptools pip distribute"
@@ -374,7 +354,7 @@ func_install_dependencies(){
     #Create Newfies User
     echo ""
     echo "Create Newfies-Dialer User/Group : $NEWFIES_USER"
-    useradd $NEWFIES_USER -U -r -M
+    useradd $NEWFIES_USER --user-group --system --no-create-home
 }
 
 
@@ -454,10 +434,10 @@ func_install_source(){
     #get Newfies-Dialer
     echo "Install Newfies-Dialer..."
     cd /usr/src/
-    rm -rf newfies-dialer
+    #rm -rf newfies-dialer
     mkdir /var/log/newfies
 
-    git clone https://github.com/innotelinc/newfies-dialer.git
+    git clone -b $BRANCH git://github.com/newfies-dialer/newfies-dialer.git
     cd newfies-dialer
 
     #Install branch develop / callcenter
@@ -504,7 +484,7 @@ func_install_pip_deps(){
     for line in $(cat /usr/src/newfies-dialer/requirements/django.txt | grep -v \#)
     do
         echo "pip install $line"
-        pip install $line
+        pip install $line --allow-all-external --allow-unverified django-admin-tools
     done
     echo "Install Test requirements..."
     for line in $(cat /usr/src/newfies-dialer/requirements/test.txt | grep -v \#)
@@ -558,7 +538,7 @@ func_prepare_settings(){
     sed -i "s/5432/$DB_PORT/" $LUA_DIR/libs/settings.lua
 
     #ODBC
-    cat /usr/src/newfies-dialer/install/odbc/odbc.ini >> /etc/odbc.ini
+    cp /usr/src/newfies-dialer/install/odbc/odbc.ini /etc/odbc.ini
     #Setup odbc.ini for POSTGRESQL
     sed -i "s/DATABASENAME/$DATABASENAME/" /etc/odbc.ini
     sed -i "s/DB_USERNAME/$DB_USERNAME/" /etc/odbc.ini

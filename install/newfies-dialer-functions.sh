@@ -893,10 +893,14 @@ func_install_rabbitmq() {
             if [ $chk -lt 1 ] ; then
                 echo "Setup new sources.list entries for RabbitMQ"
                 echo "deb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
-                wget --no-check-certificate --quiet -O - http://www.rabbitmq.com/rabbitmq-signing-key-public.asc | apt-key add -
+                wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+                dpkg -i erlang-solutions_1.0_all.deb
             fi
-            apt-get update
-            apt-get -y install rabbitmq-server
+            apt update
+            apt -y install erlang erlang-nox
+            wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.12.8/rabbitmq-server_3.12.8-1_all.deb
+            dpkg -i rabbitmq-server_3.12.8-1_all.deb
+            apt -fy install
             /usr/sbin/rabbitmq-plugins enable rabbitmq_management
             # echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
 

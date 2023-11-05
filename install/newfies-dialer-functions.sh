@@ -178,7 +178,7 @@ func_install_dependencies(){
             pg_createcluster 9.3 main --start
             /etc/init.d/postgresql start
 
-            apt-get -y install python-software-properties
+            apt-get -y install uuid uuid-dev lua-sec php-dev python3-distutils yasm libavformat-dev libswscale-dev software-properties-common
             apt-get -y install python-setuptools python-dev build-essential
             apt-get -y install nginx supervisor
             apt-get -y install git mercurial gawk
@@ -891,8 +891,7 @@ func_install_rabbitmq() {
         'DEBIAN')
             chk=`grep "rabbitmq" /etc/apt/sources.list.d/rabbitmq.list|wc -l`
             if [ $chk -lt 1 ] ; then
-                echo "Setup new sources.list entries for RabbitMQ"
-                echo "deb http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
+                echo "Setup RabbitMQ"
                 wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
                 dpkg -i erlang-solutions_1.0_all.deb
             fi
